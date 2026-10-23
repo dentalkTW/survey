@@ -1,27 +1,96 @@
 <!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Dentalk 展示用研究問卷｜幫幫我牙！</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:#f3f6fb;color:#1d2433;height:100dvh;overflow:hidden;display:flex;flex-direction:column}
-.banner{background:#ffe9a8;text-align:center;font-size:13px;padding:6px;font-weight:600}
-header{text-align:center;padding:8px 12px 0}header h1{font-size:18px;margin:4px 0}
-.prog{height:6px;background:#dde3ee;border-radius:3px;margin:8px 16px}.prog i{display:block;height:100%;background:#2f80ed;border-radius:3px;width:0;transition:width .3s}
-main{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;padding:8px 16px;max-width:480px;width:100%;margin:0 auto}
-.stack{position:relative;width:100%;flex:1;min-height:260px}
-.card{position:absolute;inset:0;background:#fff;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:24px;display:flex;flex-direction:column;justify-content:center;touch-action:none;user-select:none;transition:transform .3s,opacity .3s}
-.card.drag{transition:none}.card .sec{font-size:12px;color:#6b7590;margin-bottom:8px}.card .q{font-size:21px;line-height:1.5;font-weight:600}
-.card .hint{margin-top:18px;display:flex;justify-content:space-between;font-size:14px;gap:8px}.card .hint span{flex:1;padding:8px;border-radius:10px;text-align:center}
-.l{background:#fdecec;color:#c0392b}.r{background:#e6f6ec;color:#1e8449}
-.stamp{position:absolute;top:20px;font-size:22px;font-weight:800;padding:4px 10px;border:3px solid;border-radius:8px;opacity:0}.stamp.sl{right:20px;color:#c0392b;transform:rotate(12deg)}.stamp.sr{left:20px;color:#1e8449;transform:rotate(-12deg)}.stamp.su{left:50%;transform:translateX(-50%);color:#7f8c8d;top:auto;bottom:20px}
-.note{width:100%;margin-top:10px;padding:10px 12px;border:1px solid #cfd6e4;border-radius:12px;font-size:15px}
-.btns{display:flex;gap:10px;width:100%;margin:10px 0 14px}.btns button{flex:1;padding:14px 6px;font-size:15px;border:0;border-radius:14px;font-weight:600}
-.bl{background:#fdecec;color:#c0392b}.br{background:#e6f6ec;color:#1e8449}.bu{background:#eceff4;color:#555}
-.big{display:block;width:100%;padding:18px;margin:10px 0;font-size:18px;border:0;border-radius:16px;background:#2f80ed;color:#fff;font-weight:700}
-.big.alt{background:#27ae60}.small{font-size:13px;color:#6b7590;line-height:1.6}
-.screen{width:100%;text-align:center;padding-top:20px}textarea{width:100%;height:140px;font-size:12px}
-.back{background:none;border:0;color:#2f80ed;font-size:14px;margin-top:4px}
+:root{--b1:#214B82;--b2:#4C76AD;--navy:#082244;--g:#5B9988;--g2:#33715F;--o:#D0721F;--red:#B9473C;--bg:#F3F6FA;--ink:#14243B;--mut:#6B7789;--line:#DCE3EC}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);height:100dvh;overflow:hidden;display:flex;flex-direction:column;font-size:16px}
+.prog{height:4px;background:rgba(33,75,130,.12)}.prog i{display:block;height:100%;background:var(--b1);width:0;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.banner{color:var(--mut);text-align:center;font-size:11.5px;padding:8px 10px 0;letter-spacing:.02em}
+.banner b{color:var(--b1);font-weight:700}
+header{padding:10px 22px 0;max-width:480px;width:100%;margin:0 auto}
+.brand{display:flex;align-items:baseline;gap:8px;border-bottom:1px solid var(--line);padding-bottom:10px}
+header h1{font-size:14px;margin:0;color:var(--navy);font-weight:700;flex:1;letter-spacing:.02em}
+#cnt{font-size:13px;color:var(--b1);font-weight:700;font-variant-numeric:tabular-nums}
+main{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;padding:16px 18px 0;max-width:480px;width:100%;margin:0 auto;min-height:0}
+.stack{position:relative;width:100%;flex:1;min-height:300px;perspective:1400px}
+.card{position:absolute;inset:0;border-radius:14px;touch-action:none;user-select:none;-webkit-user-select:none;will-change:transform}
+.card.top{z-index:3;transition:transform .45s cubic-bezier(.3,1.25,.5,1)}
+.card.top.drag{transition:none}
+.card.fly{transition:transform .42s cubic-bezier(.3,.6,.3,1),opacity .42s ease}
+.card.next{z-index:2;transform:translateY(10px) scale(.96);transition:transform .4s cubic-bezier(.3,1.2,.5,1)}
+.card.next.up{transform:none}
+.card.third{z-index:1;transform:translateY(20px) scale(.92)}.card.third .face>*{visibility:hidden}
+.card.enter{animation:enter .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes enter{from{transform:translateY(24px);opacity:0}}
+.inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.3,1.2,.5,1)}
+.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:14px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 8px 24px rgba(8,34,68,.08)}
+.front{display:flex;flex-direction:column;padding:26px 24px 20px}
+.front::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--acc,var(--b1))}
+.meta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
+.qn{font-family:Roboto,sans-serif;font-weight:700;color:var(--acc,var(--b1));font-size:13px;letter-spacing:.08em}
+.sec{color:var(--mut)}.sec:before{content:"・";color:var(--line)}
+.chip-ab{margin-left:auto;font-size:12px;font-weight:700;color:var(--o);border:1px solid rgba(208,114,31,.4);padding:2px 8px;border-radius:4px}
+.ill{width:60px;height:60px;border-radius:50%;background:#F0F4FA;display:grid;place-items:center;font-size:30px;margin:auto 0 18px}
+.q{font-size:22px;line-height:1.6;font-weight:700;color:var(--navy);letter-spacing:.01em}
+.term{border-bottom:1.5px dotted var(--o);cursor:help}
+.hint{font-size:13px;color:var(--mut);margin-top:12px;line-height:1.6}
+.ab{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+.ab span{display:flex;align-items:center;gap:10px;padding:13px 14px;border:1px solid var(--line);border-radius:6px;font-size:15px;line-height:1.4;color:var(--ink)}
+.ab span i{font-style:normal;font-size:12px;font-weight:700;color:var(--mut);min-width:44px}
+.tools{display:flex;gap:18px;margin-top:auto;min-height:0;padding-top:16px;border-top:1px solid var(--line)}
+.pill{border:0;background:none;font-family:inherit;font-size:14px;font-weight:600;padding:4px 0;color:var(--b2);cursor:pointer}
+.pill.info{color:var(--o)}
+.pill.has{color:var(--g2)}
+.stamp{position:absolute;top:64px;font-size:30px;font-weight:900;letter-spacing:.08em;padding:4px 14px;border:3px solid;border-radius:8px;opacity:0;pointer-events:none;z-index:4;max-width:62%;line-height:1.25;text-align:center;background:rgba(255,255,255,.92)}
+.stamp.small{font-size:18px;letter-spacing:0}
+.stamp.sr{left:20px;color:var(--g2);border-color:var(--g);transform:rotate(-12deg)}
+.stamp.sl{right:20px;color:var(--red);border-color:var(--red);transform:rotate(12deg)}
+.stamp.su{left:50%;top:auto;bottom:84px;transform:translateX(-50%) rotate(-6deg);color:var(--b1);border-color:var(--b2)}
+.back{transform:rotateY(180deg);padding:26px 24px 20px;display:flex;flex-direction:column;gap:14px}
+.back h3{margin:0;font-size:13px;color:var(--o);letter-spacing:.08em}
+.back .it{font-size:15.5px;line-height:1.75;padding:0 0 0 12px;border-left:3px solid var(--o)}
+.back .qq{font-size:13px;color:var(--mut);line-height:1.7;padding-top:12px;border-top:1px solid var(--line)}
+.back .paused,.sheet .paused{font-size:12px;color:var(--mut)}
+.back button,.sheet button{margin-top:auto;padding:13px;border:0;border-radius:6px;background:var(--b1);color:#fff;font-size:15px;font-weight:700;font-family:inherit}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:14px;padding:20px;z-index:6;display:none;flex-direction:column;gap:12px;border:1px solid var(--line);box-shadow:0 -6px 28px rgba(8,34,68,.14);color:var(--ink);animation:sheet .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes sheet{from{transform:translateY(24px);opacity:0}}
+.sheet.on{display:flex}.sheet b{font-size:15px;color:var(--navy)}
+.note{width:100%;padding:10px 2px;border:0;border-bottom:1.5px solid var(--line);font-size:16px;font-family:inherit;background:#fff;border-radius:0}
+.note:focus{outline:none;border-color:var(--b1)}
+.btns{display:flex;flex-direction:column;gap:6px;width:100%;padding:14px 0 calc(10px + env(safe-area-inset-bottom));align-items:stretch}
+.mainb{display:flex;gap:12px}.tb{flex:1;height:52px;border-radius:12px;font-family:inherit;font-size:17px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:transform .2s cubic-bezier(.3,1.6,.5,1),background .15s;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb.no{background:#fff;color:#C2453D;border:1.5px solid #C2453D}.tb.yes{background:#5B9988;color:#fff;border:1.5px solid #5B9988;box-shadow:0 3px 10px rgba(91,153,136,.25)}
+.tb:active,.tb.press,.tb2:active,.tb2.press{transform:scale(.94)}
+.subb{display:flex;justify-content:center;align-items:center;gap:4px}.subb .dot{color:var(--mut)}
+.tb2{background:none;border:0;color:var(--mut);font-size:13.5px;font-family:inherit;padding:8px 14px;cursor:pointer;border-radius:8px;transition:transform .2s}
+.tb2:disabled{opacity:.35;pointer-events:none}
+.screen{width:100%;padding:0 2px 96px;overflow:auto;animation:enter .45s cubic-bezier(.2,.8,.2,1)}
+.cover{height:150px;border-radius:10px;overflow:hidden;position:relative;background:linear-gradient(135deg,#E6EDF6,#D3DFEE)}
+.cover svg{position:absolute;inset:0;width:100%;height:100%}
+.ttl{font-size:24px;line-height:1.45;color:var(--b1);font-weight:700;margin:22px 0 10px}
+.lead{font-size:15px;line-height:1.8;color:var(--ink);margin:0 0 6px}
+.legend{display:flex;gap:0;margin:18px 0 6px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.legend div{flex:1;padding:10px 4px;text-align:center;font-size:12px;color:var(--mut)}
+.legend div+div{border-left:1px solid var(--line)}
+.legend b{display:block;font-size:15px;margin-bottom:2px}
+h2.ask{font-size:17px;color:var(--navy);margin:26px 0 10px;display:flex;gap:8px}h2.ask span{color:var(--b1);font-size:15px}
+.big{display:flex;align-items:center;gap:14px;width:100%;padding:15px 16px;margin:0 0 10px;font-size:16px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:600;font-family:inherit;text-align:left;transition:border-color .2s,background .2s,transform .15s}
+.big:active{transform:scale(.985);border-color:var(--b2);background:#F0F4FA}
+.big small{display:block;font-size:12.5px;font-weight:400;color:var(--mut);margin-top:2px}
+.big .ic{font-size:24px}.big .go{margin-left:auto;font-size:20px;color:var(--b2)}
+.small{font-size:13px;color:var(--mut);line-height:1.7}
+.foot{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 18px calc(12px + env(safe-area-inset-bottom))}
+.foot .in{max-width:444px;margin:0 auto}
+.primary{width:100%;padding:14px;border:0;border-radius:6px;background:var(--b1);color:#fff;font-size:16px;font-weight:700;font-family:inherit;letter-spacing:.06em}
+.done .ok{width:64px;height:64px;border-radius:50%;background:#fff;border:2px solid var(--g);color:var(--g);font-size:32px;display:grid;place-items:center;margin:34px 0 0;animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+.stats{display:flex;margin:20px 0 14px;border:1px solid var(--line);border-radius:8px;background:#fff}.stats div{flex:1;padding:12px 4px;font-size:12px;color:var(--mut);text-align:center}.stats div+div{border-left:1px solid var(--line)}.stats b{display:block;font-size:22px;font-family:Roboto,sans-serif}
+textarea{width:100%;height:84px;font-size:11px;border:1px solid var(--line);border-radius:6px;padding:8px;background:#fff;color:var(--mut);margin-top:8px}
+.link{background:none;border:0;color:var(--b2);font-size:14px;margin:10px 0;font-family:inherit;padding:0}
 </style></head><body>
-<div class="banner">Dentalk 展示用研究問卷（非正式服務・資料只存在本機）</div>
-<header><h1>幫幫我牙！使用經驗小調查</h1><div class="prog"><i id="bar"></i></div></header>
+<div class="prog"><i id="bar"></i></div><div class="banner"><b>Dentalk 展示用研究問卷</b>（非正式服務・資料只存在本機）</div>
+<header><div class="brand"><h1>幫幫我牙！使用經驗小調查</h1><span id="cnt"></span></div></header>
 <main id="app"></main>
 <script>
 const Q={
@@ -59,33 +128,73 @@ patient:[
 {s:"選醫師",q:"選牙醫時，最後讓我決定的是？",ab:["距離／能多快看到","評論／IG／朋友推薦"],src:"三-7"},
 {s:"收尾",q:"我願意試用「幫幫我牙！」測試版。",src:"三-8"}
 ]};
+const TERMS=[
+{k:["超級閒"],t:"「超級閒」：醫師開啟後，代表自己隨時可以接單，系統會優先推薦給民眾。"},
+{k:["爽約率","準時到診率"],t:"「爽約率」和「準時到診率」：病人過去預約沒到，或準時到的比例，醫師接單前看得到。"},
+{k:["指定預約"],t:"「指定預約」：民眾指定某位醫師的預約。"},
+{k:["3 分鐘","8 分鐘"],t:"「3 分鐘」和「8 分鐘」：醫師 3 分鐘內沒回覆，系統會推薦其他醫師給民眾；8 分鐘內沒回覆，這筆預約就失效。"}];
+
+const ICON={dentist:["📅","🔄","📒","🤔","⏳","❓","⚡","📊","🆕","⏱️","⌛","🔔","😎","📉","⚖️"],patient:["🦷","🔍","📞","🗓️","🙈","📲","⏳","⌛","🎟️","📊","😟","🗂️","✍️","🧭","🚀"]};
+const GRAD=[["#4C76AD","#214B82"],["#5B9988","#214B82"],["#D0721F","#214B82"],["#4C76AD","#5B9988"],["#35629C","#082244"],["#5B9988","#33715F"]];
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function termsOf(q){return TERMS.filter(g=>g.k.some(k=>q.includes(k)))}
+function markQ(q){const ks=TERMS.flatMap(g=>g.k).filter(k=>q.includes(k));if(!ks.length)return esc(q);
+const re=new RegExp('('+ks.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','g');
+return q.split(re).map((p,i)=>i%2?`<span class="term">${esc(p)}</span>`:esc(p)).join('')}
 // 部署時填入 Apps Script web app 網址（/exec 結尾）；空字串＝不送出，只留本機
 const ENDPOINT="";
-const KEY="dentalk_survey_v03";let st={role:null,i:0,ans:[],t0:null};const app=document.getElementById('app'),bar=document.getElementById('bar');
+const KEY="dentalk_survey_v03";let st={role:null,i:0,ans:[],t0:null};const app=document.getElementById('app'),bar=document.getElementById('bar'),cnt=document.getElementById('cnt');let paused=false,busy=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(st))}
-function start(){bar.style.width=0;app.innerHTML=`<div class="screen"><p class="small">本問卷是「幫幫我牙！」的研究用展示版，約 3 分鐘。<br>請依你<b>實際的經驗</b>作答，沒有標準答案；不需提供任何病情資料。<br>右滑＝是／同意　左滑＝否／不同意　上滑＝不確定／跳過</p><h2>你的身份是？</h2><button class="big" onclick="pick('dentist')">🦷 我是牙醫</button><button class="big alt" onclick="pick('patient')">🙋 我是民眾</button></div>`}
+function start(){bar.style.width=0;cnt.textContent='';app.innerHTML=`<div class="screen"><div class="cover"><svg viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" fill="none"><g stroke="#4C76AD" stroke-width="1" opacity=".35">${[0,1,2,3,4,5].map(k=>`<circle cx="300" cy="40" r="${20+k*22}"/>`).join('')}</g><rect x="40" y="38" width="86" height="112" rx="10" fill="#fff" opacity=".55" transform="rotate(-8 83 94)"/><rect x="62" y="30" width="86" height="112" rx="10" fill="#fff" stroke="#214B82" stroke-opacity=".25"/><rect x="76" y="50" width="40" height="4" rx="2" fill="#214B82"/><rect x="76" y="62" width="58" height="3" rx="1.5" fill="#4C76AD" opacity=".5"/><rect x="76" y="70" width="50" height="3" rx="1.5" fill="#4C76AD" opacity=".5"/><circle cx="84" cy="122" r="7" stroke="#B9473C" stroke-width="1.5"/><circle cx="126" cy="122" r="7" fill="#5B9988"/><path d="M0 150 C90 112 200 160 360 118 L360 150Z" fill="#214B82" opacity=".08"/></svg></div>
+<div class="ttl">3 分鐘，幫我們把看牙變簡單</div><p class="lead">本問卷是「幫幫我牙！」的研究用展示版，約 3 分鐘。<br>請依你<b>實際的經驗</b>作答，沒有標準答案；不需提供任何病情資料。</p>
+<div class="legend"><div><b style="color:var(--g2)">是</b>右滑・點「是」</div><div><b style="color:var(--red)">否</b>左滑・點「否」</div><div><b style="color:var(--b1)">跳過</b>上滑・點「跳過」</div></div>
+<p class="small" style="margin:0">不想滑也可以，按下方「是／否」按鈕。看到 <b style="color:var(--o)">ⓘ</b> 可翻面看名詞說明。</p>
+<h2 class="ask"><span>01</span>你的身份是？</h2><button class="big" onclick="pick('dentist')"><span class="ic">🦷</span><span>我是牙醫<small>15 張卡・診所經驗</small></span><span class="go">›</span></button><button class="big" onclick="pick('patient')"><span class="ic">🙋</span><span>我是民眾<small>15 張卡・看牙經驗</small></span><span class="go">›</span></button></div>`}
 function pick(r){st={role:r,i:0,ans:[],t0:new Date().toISOString()};save();render()}
-function render(){const L=Q[st.role];bar.style.width=(st.i/L.length*100)+'%';if(st.i>=L.length)return done();const c=L[st.i],ab=c.ab;
-const lt=ab?ab[0]:'✕ 否／不同意',rt=ab?ab[1]:'✓ 是／同意';
-app.innerHTML=`<div class="small">第 ${st.i+1} / ${L.length} 張</div><div class="stack"><div class="card" id="card"><div class="stamp sl">${ab?'左':'否'}</div><div class="stamp sr">${ab?'右':'是'}</div><div class="stamp su">跳過</div><div class="sec">${c.s}</div><div class="q">${c.q}</div><div class="hint"><span class="l">← ${lt}</span><span class="r">${rt} →</span></div></div></div>
-<input class="note" id="note" maxlength="120" placeholder="（選填）想補充一句嗎？">
-<div class="btns"><button class="bl" onclick="answer('left')">← ${ab?'左':'否'}</button><button class="bu" onclick="answer('up')">↑ 不確定</button><button class="br" onclick="answer('right')">${ab?'右':'是'} →</button></div>
-${st.i>0?'<button class="back" onclick="back()">↩ 上一題</button>':''}`;drag(document.getElementById('card'))}
-function answer(d){const c=Q[st.role][st.i],card=document.getElementById('card');if(!card||card.dataset.gone)return;card.dataset.gone=1;
+function vis(i){return ''}
+const ACC=["#214B82","#4C76AD","#5B9988","#214B82","#D0721F","#33715F"];
+function front(c,i,full){const ab=c.ab,tg=termsOf(c.q),L=Q[st.role],n=String(i+1).padStart(2,'0'),ic=(ICON[st.role]||[])[i]||'';
+const stamps=full?`<div class="stamp sr${ab?' small':''}">${ab?esc(ab[1]):'是'}</div><div class="stamp sl${ab?' small':''}">${ab?esc(ab[0]):'否'}</div><div class="stamp su">跳過</div>`:'';
+return `<div class="face front" style="--acc:${ACC[i%ACC.length]}">${stamps}<div class="meta"><span class="qn">Q${n} / ${L.length}</span><span class="sec">${esc(c.s)}</span>${ab?'<span class="chip-ab">二選一</span>':''}</div><div class="ill">${ic}</div><div class="q">${full?markQ(c.q):esc(c.q)}</div>${ab?`<div class="ab"><span><i>← 左滑</i>${esc(ab[0])}</span><span><i>右滑 →</i>${esc(ab[1])}</span></div>`:(full?'<div class="hint">右滑＝是・左滑＝否・上滑＝跳過</div>':'')}${full?`<div class="tools">${tg.length?`<button class="pill info" id="bi">ⓘ 名詞說明${tg.length>1?'（'+tg.length+'）':''}</button>`:''}<button class="pill" id="bn">✉ 補充</button></div>`:''}</div>`}
+function render(enterAnim){paused=false;busy=false;const L=Q[st.role];bar.style.width=(st.i/L.length*100)+'%';if(st.i>=L.length)return done();cnt.textContent=`${st.i+1} / ${L.length}`;const c=L[st.i],tg=termsOf(c.q);
+const nx=L[st.i+1],n2=L[st.i+2];
+app.innerHTML=`<div class="stack">${n2?`<div class="card third">${front(n2,st.i+2,false)}</div>`:''}${nx?`<div class="card next" id="nextc"><div class="inner">${front(nx,st.i+1,false)}</div></div>`:''}<div class="card top${enterAnim?' enter':''}" id="card"><div class="inner">${front(c,st.i,true)}<div class="face back"><h3>ⓘ 名詞說明</h3>${tg.map(g=>`<div class="it">${esc(g.t)}</div>`).join('')}<div class="qq">題目：${esc(c.q)}</div><span class="paused">翻面時暫停滑動</span><button id="pclose">↺ 翻回題目</button></div></div>
+<div class="sheet" id="sheet"><b>✉ 補充（選填）</b><input class="note" id="note" maxlength="120" placeholder="（選填）想補充一句嗎？"><span class="paused">補充欄開啟時暫停滑動</span><button id="nclose">完成</button></div></div></div>
+<div class="btns"><div class="mainb"><button class="tb no" aria-label="否" onclick="tap(this,'left')">${c.ab?esc(c.ab[0]):'否'}</button><button class="tb yes" aria-label="是" onclick="tap(this,'right')">${c.ab?esc(c.ab[1]):'是'}</button></div><div class="subb"><button class="tb2" aria-label="上一題" onclick="tap(this,'back')" ${st.i>0?'':'disabled'}>上一題</button><span class="dot">·</span><button class="tb2" aria-label="跳過" onclick="tap(this,'up')">跳過</button></div></div>`;
+const card=document.getElementById('card'),sheet=document.getElementById('sheet'),note=document.getElementById('note'),bn=document.getElementById('bn'),bi=document.getElementById('bi');
+const stop=e=>e.stopPropagation();
+if(bi){bi.addEventListener('pointerdown',stop);bi.onclick=e=>{e.stopPropagation();card.classList.add('flipped');paused=true}}
+document.getElementById('pclose').addEventListener('pointerdown',stop);document.getElementById('pclose').onclick=e=>{e.stopPropagation();card.classList.remove('flipped');paused=false};
+card.querySelector('.back').addEventListener('pointerdown',stop);
+bn.addEventListener('pointerdown',stop);bn.onclick=e=>{e.stopPropagation();sheet.classList.add('on');paused=true;setTimeout(()=>note.focus(),50)};
+sheet.addEventListener('pointerdown',stop);document.getElementById('nclose').onclick=e=>{e.stopPropagation();sheet.classList.remove('on');paused=false;bn.classList.toggle('has',!!note.value.trim());bn.textContent=note.value.trim()?'✉ 已補充':'✉ 補充'};
+drag(card)}
+function tap(b,d){b.classList.add('press');setTimeout(()=>b.classList.remove('press'),180);if(d==='back')back();else answer(d)}
+function answer(d){if(paused||busy)return;const c=Q[st.role][st.i],card=document.getElementById('card');if(!card||card.dataset.gone)return;card.dataset.gone=1;busy=true;
 const val=d==='up'?'不確定/跳過':c.ab?(d==='left'?c.ab[0]:c.ab[1]):(d==='right'?'是/同意':'否/不同意');
 st.ans[st.i]={no:st.i+1,q:c.q,source:c.src,swipe:d,answer:val,note:document.getElementById('note').value.trim()};st.i++;save();
-card.style.transform=d==='up'?'translateY(-130%)':`translateX(${d==='left'?-150:150}%) rotate(${d==='left'?-20:20}deg)`;card.style.opacity=0;setTimeout(render,250)}
-function back(){st.i--;st.ans.length=st.i;save();render()}
-function drag(el){let x0,y0,dx=0,dy=0,on=false;const sl=el.querySelector('.sl'),sr=el.querySelector('.sr'),su=el.querySelector('.su');
-el.addEventListener('pointerdown',e=>{on=true;x0=e.clientX;y0=e.clientY;el.classList.add('drag');el.setPointerCapture(e.pointerId)});
-el.addEventListener('pointermove',e=>{if(!on)return;dx=e.clientX-x0;dy=e.clientY-y0;el.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/15}deg)`;sr.style.opacity=Math.max(0,dx/100);sl.style.opacity=Math.max(0,-dx/100);su.style.opacity=Math.max(0,-dy/100-Math.abs(dx)/100)});
-const end=()=>{if(!on)return;on=false;el.classList.remove('drag');if(dx>100)answer('right');else if(dx<-100)answer('left');else if(dy<-100&&Math.abs(dx)<80)answer('up');else{el.style.transform='';[sl,sr,su].forEach(s=>s.style.opacity=0)}dx=dy=0};
+const s=card.querySelector(d==='up'?'.su':d==='left'?'.sl':'.sr');if(s)s.style.opacity=1;
+const cur=card.style.transform;card.classList.remove('top');card.classList.add('fly');card.style.zIndex=5;
+const go=()=>{card.style.transform=d==='up'?'translateY(-140%) scale(.9)':`translate(${d==='left'?-160:160}%,40px) rotate(${d==='left'?-28:28}deg)`;card.style.opacity=0};
+const nc=document.getElementById('nextc');if(nc)nc.classList.add('up');
+if(!cur){setTimeout(go,140)}else go();
+setTimeout(()=>render(false),cur?420:560)}
+function back(){if(busy||paused||st.i<=0)return;st.i--;st.ans.length=st.i;save();render(true)}
+function drag(el){let x0,y0,dx=0,dy=0,on=false,lt=0,lx=0,vx=0;const sl=el.querySelector('.sl'),sr=el.querySelector('.sr'),su=el.querySelector('.su'),nc=document.getElementById('nextc');
+const fx=(r,l,u)=>{sr.style.opacity=r;sl.style.opacity=l;su.style.opacity=u};const cl=v=>Math.min(1,Math.max(0,v));
+el.addEventListener('pointerdown',e=>{if(paused||busy)return;on=true;x0=e.clientX;y0=e.clientY;lx=x0;lt=performance.now();el.classList.add('drag');el.setPointerCapture(e.pointerId)});
+el.addEventListener('pointermove',e=>{if(!on||paused)return;dx=e.clientX-x0;dy=e.clientY-y0;const t=performance.now();vx=(e.clientX-lx)/Math.max(1,t-lt);lx=e.clientX;lt=t;
+el.style.transform=`translate(${dx}px,${dy}px) rotate(${Math.max(-20,Math.min(20,dx/14))}deg)`;fx(cl(dx/100),cl(-dx/100),cl(-dy/100-Math.abs(dx)/100));
+if(nc){const p=cl(Math.max(Math.abs(dx),-dy)/140);nc.style.transition='none';nc.style.transform=`translateY(${14-14*p}px) scale(${.94+.06*p})`}});
+const end=()=>{if(!on)return;on=false;el.classList.remove('drag');if(nc){nc.style.transition='';nc.style.transform=''}
+if(dx>100||(dx>40&&vx>.6))answer('right');else if(dx<-100||(dx<-40&&vx<-.6))answer('left');else if(dy<-100&&Math.abs(dx)<80)answer('up');else{el.style.transform='';fx(0,0,0)}dx=dy=0;vx=0};
 el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end)}
 function result(){return JSON.stringify({survey:"幫幫我牙！訪談滑卡問卷（依訪談指南 v0.3）",role:st.role==='dentist'?'牙醫':'民眾',started:st.t0,finished:new Date().toISOString(),answers:st.ans},null,2)}
 function send(j){if(!ENDPOINT)return Promise.resolve(false);return fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:j}).then(()=>true).catch(()=>false)}
-function done(){bar.style.width='100%';const j=result();send(j).then(ok=>{const m=document.getElementById('sent');if(m)m.textContent=ok?'✅ 答案已送出':'（未自動送出，請用下方按鈕複製結果）'});localStorage.setItem(KEY+'_result_'+Date.now(),j);
-app.innerHTML=`<div class="screen"><h2>🙏 謝謝你的回答！</h2><p class="small" id="sent"></p><p class="small">答案已暫存在這台裝置（目前沒有後端，不會上傳）。<br>請按下方按鈕複製結果，傳給 Dentalk 訪談人員。</p><button class="big" id="cp">📋 複製結果</button><textarea id="out" readonly>${j.replace(/</g,'&lt;')}</textarea><button class="back" onclick="localStorage.removeItem(KEY);start()">重新開始</button></div>`;
+function done(){bar.style.width='100%';cnt.textContent='完成';const j=result();send(j).then(ok=>{const m=document.getElementById('sent');if(m)m.textContent=ok?'✅ 答案已送出':'（未自動送出，請用下方按鈕複製結果）'});localStorage.setItem(KEY+'_result_'+Date.now(),j);
+const A=st.ans,y=A.filter(a=>a.swipe==='right').length,n=A.filter(a=>a.swipe==='left').length,u=A.filter(a=>a.swipe==='up').length;
+app.innerHTML=`<div class="screen done"><div class="ok">✓</div><div class="ttl">謝謝你的回答！</div><p class="lead">15 張卡都完成了</p><div class="stats"><div><b style="color:var(--g2)">${y}</b>右滑</div><div><b style="color:var(--red)">${n}</b>左滑</div><div><b style="color:var(--b1)">${u}</b>跳過</div></div><p class="small" id="sent"></p><p class="small">答案已暫存在這台裝置（目前沒有後端，不會上傳）。<br>請按下方按鈕複製結果，傳給 Dentalk 訪談人員。</p><textarea id="out" readonly>${j.replace(/</g,'&lt;')}</textarea><button class="link" onclick="localStorage.removeItem(KEY);start()">重新開始</button></div><div class="foot"><div class="in"><button class="primary" id="cp">📋 複製結果</button></div></div>`;
 document.getElementById('cp').onclick=async()=>{const t=document.getElementById('out');try{await navigator.clipboard.writeText(t.value)}catch(e){t.select();document.execCommand('copy')}document.getElementById('cp').textContent='✅ 已複製'}}
-document.addEventListener('keydown',e=>{if(!st.role||st.i>=Q[st.role].length||e.target.id==='note')return;if(e.key==='ArrowLeft')answer('left');if(e.key==='ArrowRight')answer('right');if(e.key==='ArrowUp')answer('up')});
+document.addEventListener('keydown',e=>{if(!st.role||st.i>=Q[st.role].length||e.target.id==='note')return;if(e.key==='ArrowLeft')answer('left');if(e.key==='ArrowRight')answer('right');if(e.key==='ArrowUp')answer('up');if(e.key==='Backspace')back()});
 (()=>{try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.role&&s.i<Q[s.role].length){st=s;return render()}}catch(e){}start()})();
 </script></body></html>
