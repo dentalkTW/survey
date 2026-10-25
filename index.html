@@ -142,7 +142,7 @@ function markQ(q){const ks=TERMS.flatMap(g=>g.k).filter(k=>q.includes(k));if(!ks
 const re=new RegExp('('+ks.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','g');
 return q.split(re).map((p,i)=>i%2?`<span class="term">${esc(p)}</span>`:esc(p)).join('')}
 // 部署時填入 Apps Script web app 網址（/exec 結尾）；空字串＝不送出，只留本機
-const ENDPOINT="";
+const ENDPOINT="https://script.google.com/macros/s/AKfycbyhqEaAxubOr8nof4ukRDhcDOwMAOUk-XjdF68DpD08vT8gSusEJnFta9Ns96La0hGY/exec";
 const KEY="dentalk_survey_v03";let st={role:null,i:0,ans:[],t0:null};const app=document.getElementById('app'),bar=document.getElementById('bar'),cnt=document.getElementById('cnt');let paused=false,busy=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(st))}
 function start(){bar.style.width=0;cnt.textContent='';app.innerHTML=`<div class="screen"><div class="cover"><svg viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" fill="none"><g stroke="#4C76AD" stroke-width="1" opacity=".35">${[0,1,2,3,4,5].map(k=>`<circle cx="300" cy="40" r="${20+k*22}"/>`).join('')}</g><rect x="40" y="38" width="86" height="112" rx="10" fill="#fff" opacity=".55" transform="rotate(-8 83 94)"/><rect x="62" y="30" width="86" height="112" rx="10" fill="#fff" stroke="#214B82" stroke-opacity=".25"/><rect x="76" y="50" width="40" height="4" rx="2" fill="#214B82"/><rect x="76" y="62" width="58" height="3" rx="1.5" fill="#4C76AD" opacity=".5"/><rect x="76" y="70" width="50" height="3" rx="1.5" fill="#4C76AD" opacity=".5"/><circle cx="84" cy="122" r="7" stroke="#B9473C" stroke-width="1.5"/><circle cx="126" cy="122" r="7" fill="#5B9988"/><path d="M0 150 C90 112 200 160 360 118 L360 150Z" fill="#214B82" opacity=".08"/></svg></div>
