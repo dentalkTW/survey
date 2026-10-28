@@ -89,52 +89,263 @@ h2.ask{font-size:17px;color:var(--navy);margin:26px 0 10px;display:flex;gap:8px}
 textarea{width:100%;height:84px;font-size:11px;border:1px solid var(--line);border-radius:6px;padding:8px;background:#fff;color:var(--mut);margin-top:8px}
 .link{background:none;border:0;color:var(--b2);font-size:14px;margin:10px 0;font-family:inherit;padding:0}
 </style></head><body>
-<div class="prog"><i id="bar"></i></div><div class="banner"><b>Dentalk 展示用研究問卷</b>（非正式服務・資料只存在本機）</div>
+<div class="prog"><i id="bar"></i></div><div class="banner"><b>Dentalk 展示用研究問卷</b>（非正式服務・你的回答會匿名存到 Dentalk 的研究試算表，只用於產品研究）</div>
 <header><div class="brand"><h1>幫幫我牙！使用經驗小調查</h1><span id="cnt"></span></div></header>
 <main id="app"></main>
 <script>
+/* v5（2026-10-27）：白話版＋過場卡＋重新排序。
+   反向題：無反向題（選 A 版後沒有需要在分析時翻轉答案的題目）。
+   註：D15a/D15b/P11 為負向陳述（是＝擔心／不想用），與 v4 同方向，不需翻轉。
+   過場卡（tr）不記錄答案、不計題號與進度。source 欄＝題目代碼｜訪談指南出處。 */
 const Q={
-dentist:[
-{s:"爽約與空檔",q:"最近一個月內，我們診所曾遇到病人爽約或臨時取消。",src:"二-2 最近一次爽約/臨時取消"},
-{s:"爽約與空檔",q:"臨時空出的時段，我們通常能補到其他病人。",src:"二-2 那個時段後來怎麼了"},
-{s:"爽約與空檔",q:"我們診所會記錄病人過去有沒有爽約。",src:"〔3〕"},
-{s:"爽約與空檔",q:"我曾因為病人過去的紀錄，決定不約或改約。",src:"〔4〕"},
-{s:"回覆速度",q:"看診中收到新的約診訊息，通常要等看完這位病人才會處理。",src:"〔8＋22〕"},
-{s:"接案決策",q:"決定要不要接臨時病人時，有我想知道但拿不到的資訊。",src:"〔1＋2〕"},
-{s:"接案決策",q:"我們診所常有突然空出、可以馬上接病人的時段。",src:"〔15〕〔16〕"},
-{s:"病人到診紀錄",q:"接單前看得到病人的爽約率／準時到診率，會影響我接不接。",src:"6(b)〔5＋6〕"},
-{s:"病人到診紀錄",q:"沒有任何到診紀錄的新病人，我還是願意接。",src:"6(b) 追問：紀錄很少的病人"},
-{s:"回覆時間軸",q:"病人指定我後，3 分鐘沒回就推薦其他醫師給病人——以我的看診節奏可以接受。",src:"6(c)〔9＋10〕"},
-{s:"回覆時間軸",q:"指定預約 8 分鐘沒回就失效，我覺得合理。",src:"6(c)〔9＋10〕"},
-{s:"回覆時間軸",q:"我沒及時回覆指定預約時，我希望系統先？",ab:["先推薦其他醫師給病人","先打電話提醒我"],src:"6(c)〔11〕必問"},
-{s:"超級閒開關",q:"有空時，我會打開「超級閒」（隨時可接、優先被推薦）。",src:"6(d)〔17〕"},
-{s:"超級閒開關",q:"開了「超級閒」卻沒接單時，平台應暫時降低我的推薦順序。",src:"6(d)〔18〕"},
-{s:"法規顧慮",q:"列在平台上或被優先顯示，我擔心會有醫療法規問題。",src:"7〔20〕"}
+"dentist": [
+{
+"code": "D01",
+"s": "爽約與空檔",
+"q": "最近一個月，有病人約了沒來、或前一刻才取消嗎？",
+"src": "D01｜二-2"
+},
+{
+"code": "D02",
+"s": "爽約與空檔",
+"q": "病人臨時不來空出的時間，通常補得到別的病人嗎？",
+"src": "D02｜二-2"
+},
+{
+"code": "D03",
+"s": "爽約與空檔",
+"q": "診所會記下哪些病人以前約了沒來嗎？",
+"src": "D03｜〔3〕"
+},
+{
+"code": "D04a",
+"s": "爽約與空檔",
+"q": "你曾因病人以前常沒來，就不讓他約嗎？",
+"src": "D04a｜〔4〕"
+},
+{
+"code": "D04b",
+"s": "爽約與空檔",
+"q": "你曾因病人以前常沒來，而改約別的時間嗎？",
+"src": "D04b｜〔4〕"
+},
+{
+"code": "D08a",
+"s": "病人出席紀錄",
+"q": "如果能先看到「這位病人過去約了沒來的比例」，會影響你接不接嗎？",
+"src": "D08a｜6(b)〔5＋6〕",
+"tr": "接下來想問「病人過去的出席紀錄」，以及「病人指定你、你一時沒空回」時系統該怎麼做。這會影響我們怎麼設計，請照你平常的情況回答。"
+},
+{
+"code": "D08b",
+"s": "病人出席紀錄",
+"q": "如果能先看到「這位病人過去準時到的比例」，會影響你接不接嗎？",
+"src": "D08b｜6(b)〔5＋6〕"
+},
+{
+"code": "D09",
+"s": "病人出席紀錄",
+"q": "第一次來、完全沒有過去紀錄的病人，你還是願意接嗎？",
+"src": "D09｜6(b) 追問"
+},
+{
+"code": "D05",
+"s": "回覆速度",
+"q": "看診時有新病人傳訊息要約，通常要等看完手上這位才回嗎？",
+"src": "D05｜〔8＋22〕"
+},
+{
+"code": "D10",
+"s": "沒空回訊息時",
+"q": "病人指名要找你，你 3 分鐘內沒回，系統就先介紹別的醫師給他。以你看診的節奏，可以接受嗎？",
+"src": "D10｜6(c)〔9＋10〕"
+},
+{
+"code": "D11",
+"s": "沒空回訊息時",
+"q": "病人指名找你，你 8 分鐘都沒回，這次預約就自動取消、改幫他找別人。合理嗎？",
+"src": "D11｜6(c)〔9＋10〕"
+},
+{
+"code": "D12",
+"s": "沒空回訊息時",
+"q": "病人指名找你但你還沒回，你希望系統先做哪件事？",
+"src": "D12｜6(c)〔11〕",
+"ab": [
+"先幫病人介紹別的醫師",
+"先打電話提醒我"
+]
+},
+{
+"code": "D06",
+"s": "接不接臨時病人",
+"q": "有臨時病人想來時，你常覺得「資料不夠，不知道要不要接」嗎？",
+"src": "D06｜〔1＋2〕",
+"hint": "缺什麼？例如症狀、照片"
+},
+{
+"code": "D07",
+"s": "接不接臨時病人",
+"q": "診所常常突然有空檔、可以馬上看病人嗎？",
+"src": "D07｜〔15〕〔16〕"
+},
+{
+"code": "D13",
+"s": "超級閒開關",
+"q": "假設有個開關叫「超級閒」：打開＝告訴平台「我現在有空，隨時能看病人」，平台會優先介紹病人給你。有空時你會打開嗎？",
+"src": "D13｜6(d)〔17〕"
+},
+{
+"code": "D14",
+"s": "超級閒開關",
+"q": "如果開了「超級閒」卻沒接病人，平台暫時少介紹病人給你，你覺得合理嗎？",
+"src": "D14｜6(d)〔18〕"
+},
+{
+"code": "D15a",
+"s": "法規顧慮",
+"q": "名字出現在這種平台上，你會擔心違反醫療法規嗎？",
+"src": "D15a｜7〔20〕"
+},
+{
+"code": "D15b",
+"s": "法規顧慮",
+"q": "被平台優先介紹，你會擔心違反醫療法規嗎？",
+"src": "D15b｜7〔20〕"
+}
 ],
-patient:[
-{s:"急症經驗",q:"過去一年內，我曾牙齒突然痛或受傷，需要馬上找牙醫。",src:"三-3 急症經驗"},
-{s:"急症經驗",q:"那時候，要找到能馬上看我的牙醫很困難。",src:"三-3 最困難是哪一步"},
-{s:"急症經驗",q:"牙齒突然痛時，我第一步通常是？",ab:["打電話給熟悉的診所","上網搜尋／用 App"],src:"三-3 試過哪些方法"},
-{s:"約診",q:"我曾經約不到想要的時段，最後換診所或乾脆不看。",src:"三-4"},
-{s:"爽約",q:"我曾經沒去或臨時取消看牙的預約。",src:"三-5"},
-{s:"爽約",q:"要取消時，我通常會先通知診所。",src:"三-5 有通知診所嗎"},
-{s:"等待回覆",q:"約了醫師但他沒回時，我希望？",ab:["繼續等我指定的醫師","馬上推薦其他有空的醫師"],src:"三-3〔29＋30〕"},
-{s:"等待回覆",q:"指定醫師 8 分鐘內沒回，預約就失效改找別人——我可以接受。",src:"產品時間線（3/5/8 分鐘）"},
-{s:"到診紀錄",q:"訂位、上課等服務記錄我的出席／取消紀錄，我可以接受。",src:"三-6〔26〕"},
-{s:"到診紀錄",q:"醫師接我之前看得到我的爽約率／準時到診率，我可以接受。",src:"三-6〔27〕"},
-{s:"到診紀錄",q:"如果醫師看得到我的紀錄，我會因此不想用這個服務。",src:"三-6〔28〕"},
-{s:"到診紀錄",q:"到診紀錄應該算多久以前？",ab:["只算最近一段時間","全部紀錄都算"],src:"三-6 個資追問"},
-{s:"到診紀錄",q:"紀錄有錯（例如其實有到），我希望能自己申訴更正。",src:"三-6 個資追問"},
-{s:"選醫師",q:"選牙醫時，最後讓我決定的是？",ab:["距離／能多快看到","評論／IG／朋友推薦"],src:"三-7"},
-{s:"收尾",q:"我願意試用「幫幫我牙！」測試版。",src:"三-8"}
-]};
+"patient": [
+{
+"code": "P01",
+"s": "急症經驗",
+"q": "這一年內，你有沒有牙齒突然痛、或撞傷，需要馬上看牙醫？",
+"src": "P01｜三-3"
+},
+{
+"code": "P02",
+"s": "急症經驗",
+"q": "那次要找到馬上能看你的牙醫，難不難？",
+"src": "P02｜三-3",
+"ab": [
+"不難",
+"很難"
+]
+},
+{
+"code": "P03",
+"s": "急症經驗",
+"q": "牙齒突然痛，你第一件事通常做什麼？",
+"src": "P03｜三-3",
+"ab": [
+"打給常去的診所",
+"上網或用 App 找"
+]
+},
+{
+"code": "P04a",
+"s": "約診",
+"q": "你曾因約不到想要的時間，就換一家診所嗎？",
+"src": "P04a｜三-4"
+},
+{
+"code": "P04b",
+"s": "約診",
+"q": "你曾因約不到想要的時間，就乾脆不看了嗎？",
+"src": "P04b｜三-4"
+},
+{
+"code": "P05",
+"s": "沒去看牙",
+"q": "你曾經約了看牙卻沒去，或前一刻才取消嗎？",
+"src": "P05｜三-5"
+},
+{
+"code": "P06",
+"s": "沒去看牙",
+"q": "要取消時，你通常會先打給診所說一聲嗎？",
+"src": "P06｜三-5"
+},
+{
+"code": "P09",
+"s": "出席紀錄",
+"q": "像餐廳訂位、健身課這類服務，會記下你有沒有到、有沒有取消。你可以接受嗎？",
+"src": "P09｜三-6〔26〕",
+"tr": "接下來想問你「出席紀錄」。我們在考慮：醫師接你之前，能看到你過去預約有沒有到、有沒有準時。想知道你對這件事的感覺，沒有標準答案。"
+},
+{
+"code": "P10a",
+"s": "出席紀錄",
+"q": "醫師決定接你之前，可以看到你過去「沒到的次數比例」，你可以接受嗎？",
+"src": "P10a｜三-6〔27〕"
+},
+{
+"code": "P10b",
+"s": "出席紀錄",
+"q": "醫師決定接你之前，可以看到你過去「準時到的次數比例」，你可以接受嗎？",
+"src": "P10b｜三-6〔27〕"
+},
+{
+"code": "P11",
+"s": "出席紀錄",
+"q": "如果醫師看得到你過去有沒有到，你會因此不想用這個服務嗎？",
+"src": "P11｜三-6〔28〕"
+},
+{
+"code": "P12",
+"s": "出席紀錄",
+"q": "給醫師看的出席紀錄，應該算多久？",
+"src": "P12｜三-6 追問",
+"ab": [
+"只算最近一段時間",
+"從以前到現在全部算"
+]
+},
+{
+"code": "P13",
+"s": "出席紀錄",
+"q": "如果紀錄寫錯（你明明有到），你希望能自己提出更正嗎？",
+"src": "P13｜三-6 追問"
+},
+{
+"code": "P07",
+"s": "等醫師回覆",
+"q": "你在 App 上指名約某位醫師，他一直沒回，你希望？",
+"src": "P07｜三-3〔29＋30〕",
+"ab": [
+"繼續等他",
+"馬上介紹別的有空醫師"
+]
+},
+{
+"code": "P08",
+"s": "等醫師回覆",
+"q": "你指名的醫師 8 分鐘都沒回，系統就取消這次、幫你找別的醫師。可以接受嗎？",
+"src": "P08｜產品時間線"
+},
+{
+"code": "P14",
+"s": "選醫師",
+"q": "選牙醫時，最後讓你決定的是？",
+"src": "P14｜三-7",
+"ab": [
+"離我近、能很快看到",
+"網路評價或朋友推薦"
+]
+},
+{
+"code": "P15",
+"s": "收尾",
+"q": "「幫幫我牙！」是幫你快速找到有空牙醫的 App。出測試版時，你願意試用嗎？",
+"src": "P15｜三-8"
+}
+]
+};
 const TERMS=[
-{k:["超級閒"],t:"「超級閒」：醫師開啟後，代表自己隨時可以接單，系統會優先推薦給民眾。"},
-{k:["爽約率","準時到診率"],t:"「爽約率」和「準時到診率」：病人過去預約沒到，或準時到的比例，醫師接單前看得到。"},
-{k:["指定預約"],t:"「指定預約」：民眾指定某位醫師的預約。"},
-{k:["3 分鐘","8 分鐘"],t:"「3 分鐘」和「8 分鐘」：醫師 3 分鐘內沒回覆，系統會推薦其他醫師給民眾；8 分鐘內沒回覆，這筆預約就失效。"}];
+{k:["超級閒"],t:"「超級閒」：醫師端的一個開關。打開代表「我現在有空，隨時能看病人」，平台會優先把病人介紹給這位醫師。"},
+{k:["3 分鐘","8 分鐘"],t:"「3 分鐘」「8 分鐘」：目前規劃中的規則，還在調查大家的意見——醫師 3 分鐘沒回，系統先介紹別的醫師；8 分鐘沒回，這次預約自動取消。"},
+{k:["比例"],t:"「比例」：例如過去約診中沒到（或準時到）的次數，占全部約診次數的多少。"}];
 
-const ICON={dentist:["📅","🔄","📒","🤔","⏳","❓","⚡","📊","🆕","⏱️","⌛","🔔","😎","📉","⚖️"],patient:["🦷","🔍","📞","🗓️","🙈","📲","⏳","⌛","🎟️","📊","😟","🗂️","✍️","🧭","🚀"]};
+const ICON={dentist:["📅","🔄","📒","🤔","🔁","📊","⏱️","🆕","⏳","⌚","⌛","🔔","❓","⚡","😎","📉","⚖️","📣"],patient:["🦷","🔍","📞","🗓️","🚪","🙈","📲","🎟️","📊","✅","😟","🗂️","✍️","⏳","⌛","🧭","🚀"]};
 const GRAD=[["#4C76AD","#214B82"],["#5B9988","#214B82"],["#D0721F","#214B82"],["#4C76AD","#5B9988"],["#35629C","#082244"],["#5B9988","#33715F"]];
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 function termsOf(q){return TERMS.filter(g=>g.k.some(k=>q.includes(k)))}
@@ -143,23 +354,24 @@ const re=new RegExp('('+ks.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join(
 return q.split(re).map((p,i)=>i%2?`<span class="term">${esc(p)}</span>`:esc(p)).join('')}
 // 部署時填入 Apps Script web app 網址（/exec 結尾）；空字串＝不送出，只留本機
 const ENDPOINT="https://script.google.com/macros/s/AKfycbyhqEaAxubOr8nof4ukRDhcDOwMAOUk-XjdF68DpD08vT8gSusEJnFta9Ns96La0hGY/exec";
-const KEY="dentalk_survey_v03";let st={role:null,i:0,ans:[],t0:null};const app=document.getElementById('app'),bar=document.getElementById('bar'),cnt=document.getElementById('cnt');let paused=false,busy=false;
+const KEY="dentalk_survey_v05";let st={role:null,i:0,ans:[],t0:null,tr:{}};const app=document.getElementById('app'),bar=document.getElementById('bar'),cnt=document.getElementById('cnt');let paused=false,busy=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(st))}
 function start(){bar.style.width=0;cnt.textContent='';app.innerHTML=`<div class="screen"><div class="cover"><svg viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" fill="none"><g stroke="#4C76AD" stroke-width="1" opacity=".35">${[0,1,2,3,4,5].map(k=>`<circle cx="300" cy="40" r="${20+k*22}"/>`).join('')}</g><rect x="40" y="38" width="86" height="112" rx="10" fill="#fff" opacity=".55" transform="rotate(-8 83 94)"/><rect x="62" y="30" width="86" height="112" rx="10" fill="#fff" stroke="#214B82" stroke-opacity=".25"/><rect x="76" y="50" width="40" height="4" rx="2" fill="#214B82"/><rect x="76" y="62" width="58" height="3" rx="1.5" fill="#4C76AD" opacity=".5"/><rect x="76" y="70" width="50" height="3" rx="1.5" fill="#4C76AD" opacity=".5"/><circle cx="84" cy="122" r="7" stroke="#B9473C" stroke-width="1.5"/><circle cx="126" cy="122" r="7" fill="#5B9988"/><path d="M0 150 C90 112 200 160 360 118 L360 150Z" fill="#214B82" opacity=".08"/></svg></div>
 <div class="ttl">3 分鐘，幫我們把看牙變簡單</div><p class="lead">本問卷是「幫幫我牙！」的研究用展示版，約 3 分鐘。<br>請依你<b>實際的經驗</b>作答，沒有標準答案；不需提供任何病情資料。</p>
 <div class="legend"><div><b style="color:var(--g2)">是</b>右滑・點「是」</div><div><b style="color:var(--red)">否</b>左滑・點「否」</div><div><b style="color:var(--b1)">跳過</b>上滑・點「跳過」</div></div>
 <p class="small" style="margin:0">不想滑也可以，按下方「是／否」按鈕。看到 <b style="color:var(--o)">ⓘ</b> 可翻面看名詞說明。</p>
-<h2 class="ask"><span>01</span>你的身份是？</h2><button class="big" onclick="pick('dentist')"><span class="ic">🦷</span><span>我是牙醫<small>15 張卡・診所經驗</small></span><span class="go">›</span></button><button class="big" onclick="pick('patient')"><span class="ic">🙋</span><span>我是民眾<small>15 張卡・看牙經驗</small></span><span class="go">›</span></button></div>`}
-function pick(r){st={role:r,i:0,ans:[],t0:new Date().toISOString()};save();render()}
+<h2 class="ask"><span>01</span>你的身份是？</h2><button class="big" onclick="pick('dentist')"><span class="ic">🦷</span><span>我是牙醫<small>${Q.dentist.length} 張卡・診所經驗</small></span><span class="go">›</span></button><button class="big" onclick="pick('patient')"><span class="ic">🙋</span><span>我是民眾<small>${Q.patient.length} 張卡・看牙經驗</small></span><span class="go">›</span></button></div>`}
+function pick(r){st={role:r,i:0,ans:[],t0:new Date().toISOString(),tr:{}};save();render()}
 function vis(i){return ''}
 const ACC=["#214B82","#4C76AD","#5B9988","#214B82","#D0721F","#33715F"];
 function front(c,i,full){const ab=c.ab,tg=termsOf(c.q),L=Q[st.role],n=String(i+1).padStart(2,'0'),ic=(ICON[st.role]||[])[i]||'';
 const stamps=full?`<div class="stamp sr${ab?' small':''}">${ab?esc(ab[1]):'是'}</div><div class="stamp sl${ab?' small':''}">${ab?esc(ab[0]):'否'}</div><div class="stamp su">跳過</div>`:'';
 return `<div class="face front" style="--acc:${ACC[i%ACC.length]}">${stamps}<div class="meta"><span class="qn">Q${n} / ${L.length}</span><span class="sec">${esc(c.s)}</span>${ab?'<span class="chip-ab">二選一</span>':''}</div><div class="ill">${ic}</div><div class="q">${full?markQ(c.q):esc(c.q)}</div>${ab?`<div class="ab"><span><i>← 左滑</i>${esc(ab[0])}</span><span><i>右滑 →</i>${esc(ab[1])}</span></div>`:(full?'<div class="hint">右滑＝是・左滑＝否・上滑＝跳過</div>':'')}${full?`<div class="tools">${tg.length?`<button class="pill info" id="bi">ⓘ 名詞說明${tg.length>1?'（'+tg.length+'）':''}</button>`:''}<button class="pill" id="bn">✉ 補充</button></div>`:''}</div>`}
-function render(enterAnim){paused=false;busy=false;const L=Q[st.role];bar.style.width=(st.i/L.length*100)+'%';if(st.i>=L.length)return done();cnt.textContent=`${st.i+1} / ${L.length}`;const c=L[st.i],tg=termsOf(c.q);
+function render(enterAnim){paused=false;busy=false;const L=Q[st.role];bar.style.width=(st.i/L.length*100)+'%';if(st.i>=L.length)return done();
+if(L[st.i].tr&&!(st.tr||{})[L[st.i].code])return trans(L[st.i]);cnt.textContent=`${st.i+1} / ${L.length}`;const c=L[st.i],tg=termsOf(c.q);
 const nx=L[st.i+1],n2=L[st.i+2];
 app.innerHTML=`<div class="stack">${n2?`<div class="card third">${front(n2,st.i+2,false)}</div>`:''}${nx?`<div class="card next" id="nextc"><div class="inner">${front(nx,st.i+1,false)}</div></div>`:''}<div class="card top${enterAnim?' enter':''}" id="card"><div class="inner">${front(c,st.i,true)}<div class="face back"><h3>ⓘ 名詞說明</h3>${tg.map(g=>`<div class="it">${esc(g.t)}</div>`).join('')}<div class="qq">題目：${esc(c.q)}</div><span class="paused">翻面時暫停滑動</span><button id="pclose">↺ 翻回題目</button></div></div>
-<div class="sheet" id="sheet"><b>✉ 補充（選填）</b><input class="note" id="note" maxlength="120" placeholder="（選填）想補充一句嗎？"><span class="paused">補充欄開啟時暫停滑動</span><button id="nclose">完成</button></div></div></div>
+<div class="sheet" id="sheet"><b>✉ 補充（選填）</b><input class="note" id="note" maxlength="120" placeholder="${c.hint?esc(c.hint):'（選填）想補充一句嗎？'}"><span class="paused">補充欄開啟時暫停滑動</span><button id="nclose">完成</button></div></div></div>
 <div class="btns"><div class="mainb"><button class="tb no" aria-label="否" onclick="tap(this,'left')">${c.ab?esc(c.ab[0]):'否'}</button><button class="tb yes" aria-label="是" onclick="tap(this,'right')">${c.ab?esc(c.ab[1]):'是'}</button></div><div class="subb"><button class="tb2" aria-label="上一題" onclick="tap(this,'back')" ${st.i>0?'':'disabled'}>上一題</button><span class="dot">·</span><button class="tb2" aria-label="跳過" onclick="tap(this,'up')">跳過</button></div></div>`;
 const card=document.getElementById('card'),sheet=document.getElementById('sheet'),note=document.getElementById('note'),bn=document.getElementById('bn'),bi=document.getElementById('bi');
 const stop=e=>e.stopPropagation();
@@ -169,17 +381,19 @@ card.querySelector('.back').addEventListener('pointerdown',stop);
 bn.addEventListener('pointerdown',stop);bn.onclick=e=>{e.stopPropagation();sheet.classList.add('on');paused=true;setTimeout(()=>note.focus(),50)};
 sheet.addEventListener('pointerdown',stop);document.getElementById('nclose').onclick=e=>{e.stopPropagation();sheet.classList.remove('on');paused=false;bn.classList.toggle('has',!!note.value.trim());bn.textContent=note.value.trim()?'✉ 已補充':'✉ 補充'};
 drag(card)}
+function trans(c){paused=true;cnt.textContent='說明';app.innerHTML=`<div class="screen" id="trans"><div class="ttl">換個話題 👉</div><p class="lead" id="trtext">${esc(c.tr)}</p><p class="small">（這張是說明，不用作答）</p><button class="primary" id="trgo">繼續</button></div>`;
+document.getElementById('trgo').onclick=()=>{st.tr=st.tr||{};st.tr[c.code]=1;save();render(true)}}
 function tap(b,d){b.classList.add('press');setTimeout(()=>b.classList.remove('press'),180);if(d==='back')back();else answer(d)}
 function answer(d){if(paused||busy)return;const c=Q[st.role][st.i],card=document.getElementById('card');if(!card||card.dataset.gone)return;card.dataset.gone=1;busy=true;
 const val=d==='up'?'不確定/跳過':c.ab?(d==='left'?c.ab[0]:c.ab[1]):(d==='right'?'是/同意':'否/不同意');
-st.ans[st.i]={no:st.i+1,q:c.q,source:c.src,swipe:d,answer:val,note:document.getElementById('note').value.trim()};st.i++;save();
+st.ans[st.i]={no:st.i+1,q:c.q,source:c.src,code:c.code,swipe:d,answer:val,note:document.getElementById('note').value.trim()};st.i++;save();
 const s=card.querySelector(d==='up'?'.su':d==='left'?'.sl':'.sr');if(s)s.style.opacity=1;
 const cur=card.style.transform;card.classList.remove('top');card.classList.add('fly');card.style.zIndex=5;
 const go=()=>{card.style.transform=d==='up'?'translateY(-140%) scale(.9)':`translate(${d==='left'?-160:160}%,40px) rotate(${d==='left'?-28:28}deg)`;card.style.opacity=0};
 const nc=document.getElementById('nextc');if(nc)nc.classList.add('up');
 if(!cur){setTimeout(go,140)}else go();
 setTimeout(()=>render(false),cur?420:560)}
-function back(){if(busy||paused||st.i<=0)return;st.i--;st.ans.length=st.i;save();render(true)}
+function back(){if(busy||paused||st.i<=0)return;if(Q[st.role][st.i].tr&&st.tr)delete st.tr[Q[st.role][st.i].code];st.i--;st.ans.length=st.i;save();render(true)}
 function drag(el){let x0,y0,dx=0,dy=0,on=false,lt=0,lx=0,vx=0;const sl=el.querySelector('.sl'),sr=el.querySelector('.sr'),su=el.querySelector('.su'),nc=document.getElementById('nextc');
 const fx=(r,l,u)=>{sr.style.opacity=r;sl.style.opacity=l;su.style.opacity=u};const cl=v=>Math.min(1,Math.max(0,v));
 el.addEventListener('pointerdown',e=>{if(paused||busy)return;on=true;x0=e.clientX;y0=e.clientY;lx=x0;lt=performance.now();el.classList.add('drag');el.setPointerCapture(e.pointerId)});
@@ -189,12 +403,12 @@ if(nc){const p=cl(Math.max(Math.abs(dx),-dy)/140);nc.style.transition='none';nc.
 const end=()=>{if(!on)return;on=false;el.classList.remove('drag');if(nc){nc.style.transition='';nc.style.transform=''}
 if(dx>100||(dx>40&&vx>.6))answer('right');else if(dx<-100||(dx<-40&&vx<-.6))answer('left');else if(dy<-100&&Math.abs(dx)<80)answer('up');else{el.style.transform='';fx(0,0,0)}dx=dy=0;vx=0};
 el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end)}
-function result(){return JSON.stringify({survey:"幫幫我牙！訪談滑卡問卷（依訪談指南 v0.3）",role:st.role==='dentist'?'牙醫':'民眾',started:st.t0,finished:new Date().toISOString(),answers:st.ans},null,2)}
+function result(){return JSON.stringify({survey:"幫幫我牙！訪談滑卡問卷 v5（白話版）",role:st.role==='dentist'?'牙醫':'民眾',started:st.t0,finished:new Date().toISOString(),answers:st.ans},null,2)}
 function send(j){if(!ENDPOINT)return Promise.resolve(false);return fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:j}).then(()=>true).catch(()=>false)}
-function done(){bar.style.width='100%';cnt.textContent='完成';const j=result();send(j).then(ok=>{const m=document.getElementById('sent');if(m)m.textContent=ok?'✅ 答案已送出':'（未自動送出，請用下方按鈕複製結果）'});localStorage.setItem(KEY+'_result_'+Date.now(),j);
+function done(){bar.style.width='100%';cnt.textContent='完成';const j=result();const trySend=()=>{const rb=document.getElementById('resend');if(rb)rb.hidden=true;send(j).then(ok=>{const m=document.getElementById('sent');const sv=document.getElementById('saved');const rb=document.getElementById('resend');if(sv)sv.hidden=!ok;if(rb)rb.hidden=ok;if(m)m.textContent=ok?'✅ 答案已送出':'送出失敗，請檢查網路後再按一次'})};localStorage.setItem(KEY+'_result_'+Date.now(),j);
 const A=st.ans,y=A.filter(a=>a.swipe==='right').length,n=A.filter(a=>a.swipe==='left').length,u=A.filter(a=>a.swipe==='up').length;
-app.innerHTML=`<div class="screen done"><div class="ok">✓</div><div class="ttl">謝謝你的回答！</div><p class="lead">15 張卡都完成了</p><div class="stats"><div><b style="color:var(--g2)">${y}</b>右滑</div><div><b style="color:var(--red)">${n}</b>左滑</div><div><b style="color:var(--b1)">${u}</b>跳過</div></div><p class="small" id="sent"></p><p class="small">答案已暫存在這台裝置（目前沒有後端，不會上傳）。<br>請按下方按鈕複製結果，傳給 Dentalk 訪談人員。</p><textarea id="out" readonly>${j.replace(/</g,'&lt;')}</textarea><button class="link" onclick="localStorage.removeItem(KEY);start()">重新開始</button></div><div class="foot"><div class="in"><button class="primary" id="cp">📋 複製結果</button></div></div>`;
-document.getElementById('cp').onclick=async()=>{const t=document.getElementById('out');try{await navigator.clipboard.writeText(t.value)}catch(e){t.select();document.execCommand('copy')}document.getElementById('cp').textContent='✅ 已複製'}}
-document.addEventListener('keydown',e=>{if(!st.role||st.i>=Q[st.role].length||e.target.id==='note')return;if(e.key==='ArrowLeft')answer('left');if(e.key==='ArrowRight')answer('right');if(e.key==='ArrowUp')answer('up');if(e.key==='Backspace')back()});
+app.innerHTML=`<div class="screen done"><div class="ok">✓</div><div class="ttl">謝謝你的回答！</div><p class="lead">${Q[st.role].length} 張卡都完成了</p><div class="stats"><div><b style="color:var(--g2)">${y}</b>右滑</div><div><b style="color:var(--red)">${n}</b>左滑</div><div><b style="color:var(--b1)">${u}</b>跳過</div></div><p class="small" id="sent"></p><p class="small" id="saved" hidden>你的回答已匿名存到 Dentalk 的研究試算表，只用於產品研究。</p><button class="link" onclick="localStorage.removeItem(KEY);start()">重新開始</button></div><div class="foot"><div class="in"><button class="primary" id="resend" hidden>重新送出</button></div></div>`;
+document.getElementById('resend').onclick=trySend;trySend()}
+document.addEventListener('keydown',e=>{if(!st.role||paused||st.i>=Q[st.role].length||e.target.id==='note')return;if(e.key==='ArrowLeft')answer('left');if(e.key==='ArrowRight')answer('right');if(e.key==='ArrowUp')answer('up');if(e.key==='Backspace')back()});
 (()=>{try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.role&&s.i<Q[s.role].length){st=s;return render()}}catch(e){}start()})();
 </script></body></html>
