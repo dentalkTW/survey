@@ -1,98 +1,145 @@
 <!DOCTYPE html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Dentalk 展示用研究問卷｜幫幫我牙！</title>
+<meta name="theme-color" content="#FFFFFF">
 <style>
-:root{--b1:#214B82;--b2:#4C76AD;--navy:#082244;--g:#5B9988;--g2:#33715F;--o:#D0721F;--red:#B9473C;--bg:#F3F6FA;--ink:#14243B;--mut:#6B7789;--line:#DCE3EC}
+:root{--p100:#E8F1FC;--p300:#A0BFE9;--p500:#4C76AD;--p700:#214B82;--p900:#082244;
+--s200:#CBEBE2;--s500:#5B9988;--s700:#33715F;--s800:#205546;--o:#D0721F;--o-ink:#9A4F0F;--o100:#FFF1E5;
+--bg:#F9FAFB;--ink:#111827;--mut:#6B7280;--line:#E5E7EB;--g300:#D1D5DB;--g50:#F9FAFB;
+--b1:var(--p700);--b2:var(--p500);--navy:var(--p900);--g:var(--s500);--g2:var(--s700);
+--shadow:0 1px 2px rgba(0,0,0,.05)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);height:100dvh;overflow:hidden;display:flex;flex-direction:column;font-size:16px}
-.prog{height:4px;background:rgba(33,75,130,.12)}.prog i{display:block;height:100%;background:var(--b1);width:0;transition:width .5s cubic-bezier(.2,.8,.2,1)}
-.banner{color:var(--mut);text-align:center;font-size:11.5px;padding:8px 10px 0;letter-spacing:.02em}
-.banner b{color:var(--b1);font-weight:700}
-header{padding:10px 22px 0;max-width:480px;width:100%;margin:0 auto}
-.brand{display:flex;align-items:baseline;gap:8px;border-bottom:1px solid var(--line);padding-bottom:10px}
-header h1{font-size:14px;margin:0;color:var(--navy);font-weight:700;flex:1;letter-spacing:.02em}
-#cnt{font-size:13px;color:var(--b1);font-weight:700;font-variant-numeric:tabular-nums}
-main{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;padding:16px 18px 0;max-width:480px;width:100%;margin:0 auto;min-height:0}
+button{font-family:inherit}
+button:focus-visible,input:focus-visible{outline:4px solid var(--p300);outline-offset:0}
+/* 頂部：官網式白 Header＋進度條 */
+.prog{height:3px;background:var(--p100)}.prog i{display:block;height:100%;background:var(--p500);width:0;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+header{background:#fff;box-shadow:0 10px 30px -5px rgba(0,0,0,.06);position:relative;z-index:8}
+.brand{display:flex;align-items:center;gap:10px;max-width:480px;margin:0 auto;padding:10px 18px}
+.brand img{height:22px;width:auto;display:block}
+header h1{font-size:13px;margin:0;color:var(--p900);font-weight:700;flex:1;letter-spacing:.02em;padding-left:10px;border-left:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#cnt{font-size:13px;color:var(--p700);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.banner{color:var(--mut);font-size:11.5px;line-height:1.55;padding:7px 18px;letter-spacing:.02em;background:var(--bg);border-bottom:1px solid var(--line)}
+.banner>div{max-width:444px;margin:0 auto}
+.banner b{color:var(--p700);font-weight:700}
+body.is-home header,body.is-home .banner{display:none}
+main{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;padding:14px 18px 0;max-width:480px;width:100%;margin:0 auto;min-height:0}
+body.is-home main{max-width:none;padding:0}
+/* 滑卡 */
 .stack{position:relative;width:100%;flex:1;min-height:300px;perspective:1400px}
-.card{position:absolute;inset:0;border-radius:14px;touch-action:none;user-select:none;-webkit-user-select:none;will-change:transform}
+.card{position:absolute;inset:0;border-radius:8px;touch-action:none;user-select:none;-webkit-user-select:none;will-change:transform}
 .card.top{z-index:3;transition:transform .45s cubic-bezier(.3,1.25,.5,1)}
 .card.top.drag{transition:none}
 .card.fly{transition:transform .42s cubic-bezier(.3,.6,.3,1),opacity .42s ease}
-.card.next{z-index:2;transform:translateY(10px) scale(.96);transition:transform .4s cubic-bezier(.3,1.2,.5,1)}
+.card.next{z-index:2;transform:translateY(8px) scale(.965);transition:transform .4s cubic-bezier(.3,1.2,.5,1)}
 .card.next.up{transform:none}
-.card.third{z-index:1;transform:translateY(20px) scale(.92)}.card.third .face>*{visibility:hidden}
+.card.third{z-index:1;transform:translateY(16px) scale(.93)}.card.third .face>*{visibility:hidden}
 .card.enter{animation:enter .45s cubic-bezier(.2,.8,.2,1)}
 @keyframes enter{from{transform:translateY(24px);opacity:0}}
 .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.3,1.2,.5,1)}
 .flipped .inner{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;border-radius:14px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 8px 24px rgba(8,34,68,.08)}
-.front{display:flex;flex-direction:column;padding:26px 24px 20px}
-.front::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--acc,var(--b1))}
+.face{position:absolute;inset:0;border-radius:8px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04)}
+.front{display:flex;flex-direction:column;padding:24px 22px 18px}
+.front::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--acc,var(--p500))}
 .meta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
-.qn{font-family:Roboto,sans-serif;font-weight:700;color:var(--acc,var(--b1));font-size:13px;letter-spacing:.08em}
-.sec{color:var(--mut)}.sec:before{content:"・";color:var(--line)}
-.chip-ab{margin-left:auto;font-size:12px;font-weight:700;color:var(--o);border:1px solid rgba(208,114,31,.4);padding:2px 8px;border-radius:4px}
-.ill{width:60px;height:60px;border-radius:50%;background:#F0F4FA;display:grid;place-items:center;font-size:30px;margin:auto 0 18px}
-.q{font-size:22px;line-height:1.6;font-weight:700;color:var(--navy);letter-spacing:.01em}
+.qn{font-family:Roboto,sans-serif;font-weight:700;color:var(--p700);font-size:12.5px;letter-spacing:.08em;background:var(--p100);padding:2px 8px;border-radius:6px}
+.sec{color:var(--mut)}.sec:before{content:none}
+.chip-ab{margin-left:auto;font-size:12px;font-weight:700;color:var(--o-ink);background:var(--o100);padding:2px 8px;border-radius:6px}
+.ill{width:52px;height:52px;border-radius:8px;background:var(--p100);display:grid;place-items:center;font-size:26px;margin:auto 0 18px}
+.q{font-size:22px;line-height:1.6;font-weight:700;color:var(--p900);letter-spacing:.01em}
 .term{border-bottom:1.5px dotted var(--o);cursor:help}
 .hint{font-size:13px;color:var(--mut);margin-top:12px;line-height:1.6}
-.ab{display:flex;flex-direction:column;gap:10px;margin-top:22px}
-.ab span{display:flex;align-items:center;gap:10px;padding:13px 14px;border:1px solid var(--line);border-radius:6px;font-size:15px;line-height:1.4;color:var(--ink)}
+.ab{display:flex;flex-direction:column;gap:8px;margin-top:20px}
+.ab span{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;font-size:15px;line-height:1.4;color:var(--ink);background:var(--g50)}
 .ab span i{font-style:normal;font-size:12px;font-weight:700;color:var(--mut);min-width:44px}
-.tools{display:flex;gap:18px;margin-top:auto;min-height:0;padding-top:16px;border-top:1px solid var(--line)}
-.pill{border:0;background:none;font-family:inherit;font-size:14px;font-weight:600;padding:4px 0;color:var(--b2);cursor:pointer}
-.pill.info{color:var(--o)}
-.pill.has{color:var(--g2)}
-.stamp{position:absolute;top:64px;font-size:30px;font-weight:900;letter-spacing:.08em;padding:4px 14px;border:3px solid;border-radius:8px;opacity:0;pointer-events:none;z-index:4;max-width:62%;line-height:1.25;text-align:center;background:rgba(255,255,255,.92)}
+.tools{display:flex;gap:20px;margin-top:auto;min-height:0;padding-top:14px;border-top:1px solid var(--line)}
+.pill{border:0;background:none;font-size:14px;font-weight:500;padding:4px 0;color:var(--p500);cursor:pointer;letter-spacing:.02em}
+.pill.info{color:var(--o-ink)}
+.pill.has{color:var(--s700)}
+.stamp{position:absolute;top:64px;font-size:28px;font-weight:900;letter-spacing:.1em;padding:4px 14px;border:2.5px solid;border-radius:2px;opacity:0;pointer-events:none;z-index:4;max-width:62%;line-height:1.25;text-align:center;background:rgba(255,255,255,.94)}
 .stamp.small{font-size:18px;letter-spacing:0}
-.stamp.sr{left:20px;color:var(--g2);border-color:var(--g);transform:rotate(-12deg)}
-.stamp.sl{right:20px;color:var(--red);border-color:var(--red);transform:rotate(12deg)}
-.stamp.su{left:50%;top:auto;bottom:84px;transform:translateX(-50%) rotate(-6deg);color:var(--b1);border-color:var(--b2)}
-.back{transform:rotateY(180deg);padding:26px 24px 20px;display:flex;flex-direction:column;gap:14px}
-.back h3{margin:0;font-size:13px;color:var(--o);letter-spacing:.08em}
+.stamp.sr{left:20px;color:var(--p700);border-color:var(--p700);transform:rotate(-10deg)}
+.stamp.sl{right:20px;color:var(--p700);border-color:var(--p700);transform:rotate(10deg)}
+.stamp.su{left:50%;top:auto;bottom:84px;transform:translateX(-50%) rotate(-4deg);color:var(--p700);border-color:var(--p500)}
+.back{transform:rotateY(180deg);padding:24px 22px 18px;display:flex;flex-direction:column;gap:14px}
+.back h3{margin:0;font-size:13px;color:var(--o-ink);letter-spacing:.08em}
 .back .it{font-size:15.5px;line-height:1.75;padding:0 0 0 12px;border-left:3px solid var(--o)}
 .back .qq{font-size:13px;color:var(--mut);line-height:1.7;padding-top:12px;border-top:1px solid var(--line)}
-.back .paused,.sheet .paused{font-size:12px;color:var(--mut)}
-.back button,.sheet button{margin-top:auto;padding:13px;border:0;border-radius:6px;background:var(--b1);color:#fff;font-size:15px;font-weight:700;font-family:inherit}
-.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:14px;padding:20px;z-index:6;display:none;flex-direction:column;gap:12px;border:1px solid var(--line);box-shadow:0 -6px 28px rgba(8,34,68,.14);color:var(--ink);animation:sheet .3s cubic-bezier(.2,.8,.2,1)}
+.privacy{font-size:13px;line-height:1.6;color:var(--o-ink)}.contact{margin-top:14px;display:flex;flex-direction:column;gap:6px}.contact label{font-size:13px;font-weight:500;color:var(--ink)}.contact .privacy{font-size:12.5px;line-height:1.5}
+.back button,.sheet button{margin-top:auto;padding:13px;border:1px solid var(--p500);border-radius:0;background:var(--p500);color:#fff;font-size:15px;font-weight:500;letter-spacing:.06em;cursor:pointer}
+.back button:hover,.sheet button:hover{background:var(--p700);border-color:var(--p700)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:8px;padding:20px;z-index:6;display:none;flex-direction:column;gap:12px;border:1px solid var(--line);box-shadow:0 -6px 24px rgba(8,34,68,.10);color:var(--ink);animation:sheet .3s cubic-bezier(.2,.8,.2,1)}
 @keyframes sheet{from{transform:translateY(24px);opacity:0}}
-.sheet.on{display:flex}.sheet b{font-size:15px;color:var(--navy)}
-.note{width:100%;padding:10px 2px;border:0;border-bottom:1.5px solid var(--line);font-size:16px;font-family:inherit;background:#fff;border-radius:0}
-.note:focus{outline:none;border-color:var(--b1)}
-.btns{display:flex;flex-direction:column;gap:6px;width:100%;padding:14px 0 calc(10px + env(safe-area-inset-bottom));align-items:stretch}
-.mainb{display:flex;gap:12px}.tb{flex:1;height:52px;border-radius:12px;font-family:inherit;font-size:17px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:transform .2s cubic-bezier(.3,1.6,.5,1),background .15s;padding:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tb.no{background:#fff;color:#C2453D;border:1.5px solid #C2453D}.tb.yes{background:#5B9988;color:#fff;border:1.5px solid #5B9988;box-shadow:0 3px 10px rgba(91,153,136,.25)}
-.tb:active,.tb.press,.tb2:active,.tb2.press{transform:scale(.94)}
-.subb{display:flex;justify-content:center;align-items:center;gap:4px}.subb .dot{color:var(--mut)}
-.tb2{background:none;border:0;color:var(--mut);font-size:13.5px;font-family:inherit;padding:8px 14px;cursor:pointer;border-radius:8px;transition:transform .2s}
-.tb2:disabled{opacity:.35;pointer-events:none}
+.sheet.on{display:flex}.sheet b{font-size:15px;color:var(--p900)}
+.note{width:100%;padding:10px 12px;border:1px solid var(--g300);font-size:16px;font-family:inherit;background:var(--g50);border-radius:8px;color:var(--ink)}
+.note:focus{outline:none;border-color:var(--p500);box-shadow:0 0 0 3px var(--p100)}
+/* 是／否：同樣中性的直角外框按鈕（v5.1 起兩個按鈕刻意同色，避免引導答案） */
+.btns{display:flex;flex-direction:column;gap:4px;width:100%;padding:14px 0 calc(10px + env(safe-area-inset-bottom));align-items:stretch}
+.mainb{display:flex;gap:10px}.tb{flex:1;min-width:0;min-height:54px;border-radius:0;font-size:17px;font-weight:500;letter-spacing:.1em;line-height:1.35;cursor:pointer;transition:transform .2s cubic-bezier(.3,1.6,.5,1),background .15s;padding:8px 10px;white-space:normal;word-break:break-all}
+.tb.no,.tb.yes{background:#fff;color:var(--p700);border:1.5px solid var(--p500)}.tb.no:hover,.tb.yes:hover,.tb.no:active,.tb.yes:active,.tb.press{background:var(--p100)}.tb.long{font-size:15px;letter-spacing:.02em}
+.tb:active,.tb.press,.tb2:active,.tb2.press{transform:scale(.96)}
+.subb{display:flex;justify-content:center;align-items:center;gap:4px}.subb .dot{color:var(--g300)}
+.tb2{background:none;border:0;color:var(--mut);font-size:13.5px;padding:8px 14px;cursor:pointer;border-radius:0;transition:transform .2s;letter-spacing:.04em}
+.tb2:disabled{opacity:.4;pointer-events:none}
+/* 一般畫面（過場、完成） */
 .screen{width:100%;padding:0 2px 96px;overflow:auto;animation:enter .45s cubic-bezier(.2,.8,.2,1)}
-.cover{height:150px;border-radius:10px;overflow:hidden;position:relative;background:linear-gradient(135deg,#E6EDF6,#D3DFEE)}
-.cover svg{position:absolute;inset:0;width:100%;height:100%}
-.ttl{font-size:24px;line-height:1.45;color:var(--b1);font-weight:700;margin:22px 0 10px}
+.ttl{font-size:24px;line-height:1.45;color:var(--p900);font-weight:700;margin:22px 0 10px}
 .lead{font-size:15px;line-height:1.8;color:var(--ink);margin:0 0 6px}
-.legend{display:flex;gap:0;margin:18px 0 6px;border:1px solid var(--line);border-radius:8px;background:#fff}
-.legend div{flex:1;padding:10px 4px;text-align:center;font-size:12px;color:var(--mut)}
-.legend div+div{border-left:1px solid var(--line)}
-.legend b{display:block;font-size:15px;margin-bottom:2px}
-h2.ask{font-size:17px;color:var(--navy);margin:26px 0 10px;display:flex;gap:8px}h2.ask span{color:var(--b1);font-size:15px}
-.big{display:flex;align-items:center;gap:14px;width:100%;padding:15px 16px;margin:0 0 10px;font-size:16px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font-weight:600;font-family:inherit;text-align:left;transition:border-color .2s,background .2s,transform .15s}
-.big:active{transform:scale(.985);border-color:var(--b2);background:#F0F4FA}
-.big small{display:block;font-size:12.5px;font-weight:400;color:var(--mut);margin-top:2px}
-.big .ic{font-size:24px}.big .go{margin-left:auto;font-size:20px;color:var(--b2)}
 .small{font-size:13px;color:var(--mut);line-height:1.7}
-.foot{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 18px calc(12px + env(safe-area-inset-bottom))}
+.foot{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 18px calc(12px + env(safe-area-inset-bottom));z-index:9}
 .foot .in{max-width:444px;margin:0 auto}
-.primary{width:100%;padding:14px;border:0;border-radius:6px;background:var(--b1);color:#fff;font-size:16px;font-weight:700;font-family:inherit;letter-spacing:.06em}
-.done .ok{width:64px;height:64px;border-radius:50%;background:#fff;border:2px solid var(--g);color:var(--g);font-size:32px;display:grid;place-items:center;margin:34px 0 0;animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+.primary{width:100%;padding:15px;border:1px solid var(--p500);border-radius:0;background:var(--p500);color:#fff;font-size:16px;font-weight:500;letter-spacing:.1em;cursor:pointer;transition:background .15s}
+.primary:hover,.primary:active{background:var(--p700);border-color:var(--p700)}
+#trans .primary{margin-top:18px}
+.done{position:relative}
+.done .ok{width:64px;height:64px;border-radius:50%;background:var(--s200);border:0;color:var(--s800);font-size:30px;font-weight:700;display:grid;place-items:center;margin:34px 0 0;animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+.done .ok.fail{background:var(--o100);color:var(--o-ink)}.done .ok.wait{background:var(--p100);color:var(--p700)}
+.done #sent{font-weight:700;color:var(--s800)}
+.done #saved{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;box-shadow:var(--shadow);color:var(--ink);font-size:13.5px}
 @keyframes pop{from{transform:scale(.4);opacity:0}}
-.stats{display:flex;margin:20px 0 14px;border:1px solid var(--line);border-radius:8px;background:#fff}.stats div{flex:1;padding:12px 4px;font-size:12px;color:var(--mut);text-align:center}.stats div+div{border-left:1px solid var(--line)}.stats b{display:block;font-size:22px;font-family:Roboto,sans-serif}
-.link{background:none;border:0;color:var(--b2);font-size:14px;margin:10px 0;font-family:inherit;padding:0}
+.link{background:none;border:0;color:var(--p500);font-size:14px;margin:12px 0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.legal{background:var(--p900);color:#E5E7EB;text-align:center;font-size:12px;letter-spacing:.04em;padding:14px 16px;line-height:1.6}
+.foot.has-legal{padding:0}.foot.has-legal .in{padding:12px 18px}.foot.has-legal .in:has(> [hidden]:only-child){display:none}
+.foot .legal{padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+/* 首頁：與 11/12 社群圖同一套 */
+.home{position:relative;padding:0;overflow-x:hidden;animation:enter .45s cubic-bezier(.2,.8,.2,1)}
+.home .deco{position:absolute;pointer-events:none;border-radius:50%}
+.home .d1{width:340px;height:340px;right:-140px;top:-140px;background:#DCE8F7;opacity:.8;box-shadow:0 0 0 56px rgba(232,241,252,.9),0 0 0 120px rgba(232,241,252,.45)}
+
+.home .d2{width:220px;height:220px;left:-120px;bottom:120px;background:var(--p100);opacity:.5;box-shadow:0 0 0 40px rgba(232,241,252,.5)}
+.hwrap{position:relative;padding:28px 22px 8px;max-width:480px;margin:0 auto}
+.hlogo{height:34px;width:auto;display:block}
+.tags{display:flex;gap:8px;margin:22px 0 14px;flex-wrap:wrap}
+.tag{font-size:13px;font-weight:700;padding:3px 10px;border-radius:6px;letter-spacing:.04em}
+.tag.r{background:var(--p100);color:var(--p700)}.tag.w{background:var(--o100);color:var(--o-ink)}
+.tag.g{background:var(--s200);color:var(--s800);font-size:14px;padding:5px 12px}
+.htitle{font-size:44px;line-height:1.15;margin:0;color:var(--p900);font-weight:900;letter-spacing:.02em}
+.hsub{font-size:21px;font-weight:700;color:var(--p700);margin:8px 0 0;letter-spacing:.04em}
+.hbar{width:56px;height:4px;background:var(--p500);margin:14px 0 16px}
+.hlead{font-size:18px;font-weight:700;color:var(--ink);margin:0 0 6px}
+.hbody{font-size:14.5px;line-height:1.75;color:#4B5563;margin:0}
+.hbody b{color:var(--ink)}
+.hcard{background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:14px 16px;margin:18px 0 0}
+.hcard .k{font-size:12.5px;color:var(--mut);margin-bottom:4px}
+.hcard .gest{display:flex;justify-content:space-between;font-size:15px;font-weight:700;color:var(--p900)}
+.hcard .gest span{white-space:nowrap}
+.hcard .s{font-size:12.5px;color:var(--mut);margin-top:6px;line-height:1.6}
+.hcard .s b{color:var(--o-ink)}
+.ask{font-size:15px;color:var(--p900);margin:22px 0 10px;font-weight:700}
+.role{display:flex;align-items:center;width:100%;padding:15px 18px;margin:0 0 10px;border:1px solid var(--p500);border-radius:0;background:var(--p500);color:#fff;font-size:16px;font-weight:500;letter-spacing:.08em;text-align:left;cursor:pointer;transition:background .15s}
+.role:hover,.role:active{background:var(--p700);border-color:var(--p700)}
+.role small{font-size:12.5px;font-weight:400;letter-spacing:.02em;opacity:.92;margin-left:8px}
+.role .go{margin-left:auto;font-size:14px;letter-spacing:.06em}
+.hnote{font-size:12px;color:var(--mut);line-height:1.65;margin:10px 0 0}
+.home .legal{margin-top:22px}
+@media (max-height:700px){.hc .ill{display:none}.hc .q{margin-top:8px}.contact{margin-top:8px}.contact .privacy{font-size:12px;line-height:1.4}.front{padding:18px 20px 12px}.ill{width:40px;height:40px;font-size:20px;margin:10px 0 8px;flex:none}.q{font-size:19px;line-height:1.5}.hint{margin-top:8px}.ab{margin-top:12px;gap:8px}.ab span{padding:9px 12px}.tools{padding-top:10px}.htitle{font-size:38px}}
+@media (max-height:600px){.front{padding:12px 14px 8px}.hc .q{font-size:16.5px;line-height:1.4;margin-top:2px}.hc .hint{font-size:12px;margin-top:4px;line-height:1.4}.hc .contact{margin-top:6px}.hc .contact .privacy{font-size:11.5px;line-height:1.35}.hc .tools{padding-top:4px}.hc .pill{padding:2px 0}.hc .meta{font-size:12px}}
 </style></head><body>
-<div class="prog"><i id="bar"></i></div><div class="banner"><b>Dentalk 展示用研究問卷</b>（非正式服務・你的回答會匿名存到 Dentalk 的研究試算表，只用於產品研究）</div>
-<header><div class="brand"><h1>幫幫我牙！使用經驗小調查</h1><span id="cnt"></span></div></header>
+<header><div class="brand"><img src="logo-blue.svg" alt="Dentalk"><h1>幫幫我牙！使用經驗小調查</h1><span id="cnt"></span></div><div class="prog"><i id="bar"></i></div></header><div class="banner"><div><b>Dentalk 展示用問卷</b>：這是做產品研究用的試做版，不是正式服務。回答會存到 Dentalk 的研究試算表，只用於產品研究。補充欄沒寫個人資料，就是匿名。</div></div>
 <main id="app"></main>
 <script>
-/* v5（2026-10-27）：白話版＋過場卡＋重新排序。
+/* v5.2（2026-10-28）：P15 選填聯絡方式（只存在記憶體，成功送出後清除；不寫 localStorage）、匿名說法依實際情況、不再把完整答案備份到 localStorage。
+   v5.1（2026-10-28）：完成頁三狀態（送出中／成功／失敗）、補充欄匿名提醒、否／是改中性色、長選項換行、P02/P15 改寫、名詞說明、過場卡可回上一題。
+   v5（2026-10-27）：白話版＋過場卡＋重新排序。
    反向題：無反向題（選 A 版後沒有需要在分析時翻轉答案的題目）。
    註：D15a/D15b/P11 為負向陳述（是＝擔心／不想用），與 v4 同方向，不需翻轉。
    過場卡（tr）不記錄答案、不計題號與進度。source 欄＝題目代碼｜訪談指南出處。 */
@@ -339,6 +386,7 @@ const Q={
 }
 ]
 };
+
 const TERMS=[
 {k:["超級閒"],t:"「超級閒」：醫師端的一個開關。打開代表「我現在有空，隨時能看病人」，平台會優先把病人介紹給這位醫師。"},
 {k:["3 分鐘","8 分鐘"],t:"「3 分鐘」「8 分鐘」：目前規劃中的規則，還在調查大家的意見——醫師 3 分鐘沒回，系統先介紹別的醫師；8 分鐘沒回，這次預約自動取消。"},
@@ -347,31 +395,36 @@ const TERMS=[
 const ICON={dentist:["📅","🔄","📒","🤔","🔁","📊","⏱️","🆕","⏳","⌚","⌛","🔔","❓","⚡","😎","📉","⚖️","📣"],patient:["🦷","🔍","📞","🗓️","🚪","🙈","📲","🎟️","📊","✅","😟","🗂️","✍️","⏳","⌛","🧭","🚀"]};
 const GRAD=[["#4C76AD","#214B82"],["#5B9988","#214B82"],["#D0721F","#214B82"],["#4C76AD","#5B9988"],["#35629C","#082244"],["#5B9988","#33715F"]];
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
-function termsOf(q){return TERMS.filter(g=>g.k.some(k=>q.includes(k)))}
-function markQ(q){const ks=TERMS.flatMap(g=>g.k).filter(k=>q.includes(k));if(!ks.length)return esc(q);
+function termsOf(q){return TERMS.filter(g=>(!g.r||g.r===st.role)&&g.k.some(k=>q.includes(k)))}
+function markQ(q){const ks=TERMS.filter(g=>!g.r||g.r===st.role).flatMap(g=>g.k).filter(k=>q.includes(k));if(!ks.length)return esc(q);
 const re=new RegExp('('+ks.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')+')','g');
 return q.split(re).map((p,i)=>i%2?`<span class="term">${esc(p)}</span>`:esc(p)).join('')}
 // 部署時填入 Apps Script web app 網址（/exec 結尾）；空字串＝不送出，只留本機
 const ENDPOINT="https://script.google.com/macros/s/AKfycbyhqEaAxubOr8nof4ukRDhcDOwMAOUk-XjdF68DpD08vT8gSusEJnFta9Ns96La0hGY/exec";
 const KEY="dentalk_survey_v05";let st={role:null,i:0,ans:[],t0:null,tr:{}};const app=document.getElementById('app'),bar=document.getElementById('bar'),cnt=document.getElementById('cnt');let paused=false,busy=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(st))}
-function start(){bar.style.width=0;cnt.textContent='';app.innerHTML=`<div class="screen"><div class="cover"><svg viewBox="0 0 360 150" preserveAspectRatio="xMidYMid slice" fill="none"><g stroke="#4C76AD" stroke-width="1" opacity=".35">${[0,1,2,3,4,5].map(k=>`<circle cx="300" cy="40" r="${20+k*22}"/>`).join('')}</g><rect x="40" y="38" width="86" height="112" rx="10" fill="#fff" opacity=".55" transform="rotate(-8 83 94)"/><rect x="62" y="30" width="86" height="112" rx="10" fill="#fff" stroke="#214B82" stroke-opacity=".25"/><rect x="76" y="50" width="40" height="4" rx="2" fill="#214B82"/><rect x="76" y="62" width="58" height="3" rx="1.5" fill="#4C76AD" opacity=".5"/><rect x="76" y="70" width="50" height="3" rx="1.5" fill="#4C76AD" opacity=".5"/><circle cx="84" cy="122" r="7" stroke="#B9473C" stroke-width="1.5"/><circle cx="126" cy="122" r="7" fill="#5B9988"/><path d="M0 150 C90 112 200 160 360 118 L360 150Z" fill="#214B82" opacity=".08"/></svg></div>
-<div class="ttl">3 分鐘，幫我們把看牙變簡單</div><p class="lead">本問卷是「幫幫我牙！」的研究用展示版，約 3 分鐘。<br>請依你<b>實際的經驗</b>作答，沒有標準答案；不需提供任何病情資料。</p>
-<div class="legend"><div><b style="color:var(--g2)">是</b>右滑・點「是」</div><div><b style="color:var(--red)">否</b>左滑・點「否」</div><div><b style="color:var(--b1)">跳過</b>上滑・點「跳過」</div></div>
-<p class="small" style="margin:0">不想滑也可以，按下方「是／否」按鈕。看到 <b style="color:var(--o)">ⓘ</b> 可翻面看名詞說明。</p>
-<h2 class="ask"><span>01</span>你的身份是？</h2><button class="big" onclick="pick('dentist')"><span class="ic">🦷</span><span>我是牙醫<small>${Q.dentist.length} 張卡・診所經驗</small></span><span class="go">›</span></button><button class="big" onclick="pick('patient')"><span class="ic">🙋</span><span>我是民眾<small>${Q.patient.length} 張卡・看牙經驗</small></span><span class="go">›</span></button></div>`}
+function start(){document.body.classList.add('is-home');bar.style.width=0;cnt.textContent='';app.innerHTML=`<div class="screen home"><span class="deco d1"></span><span class="deco d2"></span><div class="hwrap">
+<img class="hlogo" src="logo-blue.svg" alt="Dentalk">
+<div class="tags"><span class="tag r">研究問卷</span><span class="tag w">非正式服務</span></div>
+<h1 class="htitle">幫幫我牙！</h1><p class="hsub">使用經驗小調查</p><div class="hbar"></div>
+<p class="hlead">約 3 分鐘，幫我們把看牙變簡單</p>
+<p class="hbody"><b>Dentalk 展示用研究問卷</b>，是「幫幫我牙！」的研究用展示版，不是正式服務。請依你<b>實際的經驗</b>作答，沒有標準答案，也不需提供病情資料。回答會存到研究試算表。「補充」欄沒寫姓名、電話或病歷等可以認出你的資料，就是匿名。</p>
+<div class="tags" style="margin:16px 0 0"><span class="tag g">牙醫 ${Q.dentist.length} 題</span><span class="tag g">民眾 ${Q.patient.length} 題</span></div>
+<div class="hcard"><div class="k">怎麼填</div><div class="gest"><span>右滑＝是</span><span>左滑＝否</span><span>上滑＝跳過</span></div><div class="s">也可以直接按下方「是／否／跳過」按鈕，不必一定要滑。看到 <b>ⓘ</b> 可翻面看名詞說明。</div></div>
+<h2 class="ask">先選你的身份，開始填寫</h2><button class="role" onclick="pick('dentist')">我是牙醫<small>${Q.dentist.length} 題・診所經驗</small><span class="go">開始填寫 →</span></button><button class="role" onclick="pick('patient')">我是民眾<small>${Q.patient.length} 題・看牙經驗</small><span class="go">開始填寫 →</span></button>
+</div><div class="legal">Dentalk 產品研究 · 回答只用於研究 · 不是正式服務</div></div>`}
 function pick(r){st={role:r,i:0,ans:[],t0:new Date().toISOString(),tr:{}};save();render()}
 function vis(i){return ''}
 const ACC=["#214B82","#4C76AD","#5B9988","#214B82","#D0721F","#33715F"];
 function front(c,i,full){const ab=c.ab,tg=termsOf(c.q),L=Q[st.role],n=String(i+1).padStart(2,'0'),ic=(ICON[st.role]||[])[i]||'';
 const stamps=full?`<div class="stamp sr${ab?' small':''}">${ab?esc(ab[1]):'是'}</div><div class="stamp sl${ab?' small':''}">${ab?esc(ab[0]):'否'}</div><div class="stamp su">跳過</div>`:'';
-return `<div class="face front" style="--acc:${ACC[i%ACC.length]}">${stamps}<div class="meta"><span class="qn">Q${n} / ${L.length}</span><span class="sec">${esc(c.s)}</span>${ab?'<span class="chip-ab">二選一</span>':''}</div><div class="ill">${ic}</div><div class="q">${full?markQ(c.q):esc(c.q)}</div>${ab?`<div class="ab"><span><i>← 左滑</i>${esc(ab[0])}</span><span><i>右滑 →</i>${esc(ab[1])}</span></div>`:(full?'<div class="hint">右滑＝是・左滑＝否・上滑＝跳過</div>':'')}${full?`<div class="tools">${tg.length?`<button class="pill info" id="bi">ⓘ 名詞說明${tg.length>1?'（'+tg.length+'）':''}</button>`:''}<button class="pill" id="bn">✉ 補充</button></div>`:''}</div>`}
-function render(enterAnim){paused=false;busy=false;const L=Q[st.role];bar.style.width=(st.i/L.length*100)+'%';if(st.i>=L.length)return done();
+return `<div class="face front" style="--acc:${ACC[i%ACC.length]}">${stamps}<div class="meta"><span class="qn">Q${n} / ${L.length}</span><span class="sec">${esc(c.s)}</span>${ab?'<span class="chip-ab">二選一</span>':''}</div><div class="ill">${ic}</div><div class="q">${full?markQ(c.q):esc(c.q)}</div>${full&&c.sub?`<div class="hint">${esc(c.sub)}</div>`:''}${ab?`<div class="ab"><span><i>← 左滑</i>${esc(ab[0])}</span><span><i>右滑 →</i>${esc(ab[1])}</span></div>`:(full?'<div class="hint">右滑＝是・左滑＝否・上滑＝跳過</div>':'')}${full?`<div class="tools">${tg.length?`<button class="pill info" id="bi">ⓘ 名詞說明${tg.length>1?'（'+tg.length+'）':''}</button>`:''}<button class="pill" id="bn">✉ 補充</button></div>`:''}</div>`}
+function render(enterAnim){document.body.classList.remove('is-home');paused=false;busy=false;const L=Q[st.role];bar.style.width=(st.i/L.length*100)+'%';if(st.i>=L.length)return done();
 if(L[st.i].tr&&!(st.tr||{})[L[st.i].code])return trans(L[st.i]);cnt.textContent=`${st.i+1} / ${L.length}`;const c=L[st.i],tg=termsOf(c.q);
 const nx=L[st.i+1],n2=L[st.i+2];
-app.innerHTML=`<div class="stack">${n2?`<div class="card third">${front(n2,st.i+2,false)}</div>`:''}${nx?`<div class="card next" id="nextc"><div class="inner">${front(nx,st.i+1,false)}</div></div>`:''}<div class="card top${enterAnim?' enter':''}" id="card"><div class="inner">${front(c,st.i,true)}<div class="face back"><h3>ⓘ 名詞說明</h3>${tg.map(g=>`<div class="it">${esc(g.t)}</div>`).join('')}<div class="qq">題目：${esc(c.q)}</div><span class="paused">翻面時暫停滑動</span><button id="pclose">↺ 翻回題目</button></div></div>
-<div class="sheet" id="sheet"><b>✉ 補充（選填）</b><input class="note" id="note" maxlength="120" placeholder="${c.hint?esc(c.hint):'（選填）想補充一句嗎？'}"><span class="paused">補充欄開啟時暫停滑動</span><button id="nclose">完成</button></div></div></div>
-<div class="btns"><div class="mainb"><button class="tb no" aria-label="否" onclick="tap(this,'left')">${c.ab?esc(c.ab[0]):'否'}</button><button class="tb yes" aria-label="是" onclick="tap(this,'right')">${c.ab?esc(c.ab[1]):'是'}</button></div><div class="subb"><button class="tb2" aria-label="上一題" onclick="tap(this,'back')" ${st.i>0?'':'disabled'}>上一題</button><span class="dot">·</span><button class="tb2" aria-label="跳過" onclick="tap(this,'up')">跳過</button></div></div>`;
+app.innerHTML=`<div class="stack">${n2?`<div class="card third">${front(n2,st.i+2,false)}</div>`:''}${nx?`<div class="card next" id="nextc"><div class="inner">${front(nx,st.i+1,false)}</div></div>`:''}<div class="card top${enterAnim?' enter':''}" id="card"><div class="inner">${front(c,st.i,true)}<div class="face back"><h3>ⓘ 名詞說明</h3>${tg.map(g=>`<div class="it">${esc(g.t)}</div>`).join('')}<div class="qq">題目：${esc(c.q)}</div><button id="pclose">↺ 翻回題目</button></div></div>
+<div class="sheet" id="sheet"><b>✉ 補充（選填）</b><input class="note" id="note" maxlength="120" placeholder="${c.hint?esc(c.hint):'（選填）想補充一句嗎？'}"><span class="privacy">請不要寫姓名、電話、病歷等可以認出你的資料。這一欄寫的內容也會存進研究試算表。</span><button id="nclose">完成</button></div></div></div>
+<div class="btns"><div class="mainb"><button class="tb no${c.ab&&c.ab[0].length>5?' long':''}" aria-label="${c.ab?esc(c.ab[0]):'否'}" onclick="tap(this,'left')">${c.ab?esc(c.ab[0]):'否'}</button><button class="tb yes${c.ab&&c.ab[1].length>5?' long':''}" aria-label="${c.ab?esc(c.ab[1]):'是'}" onclick="tap(this,'right')">${c.ab?esc(c.ab[1]):'是'}</button></div><div class="subb"><button class="tb2" aria-label="上一題" onclick="tap(this,'back')" ${st.i>0?'':'disabled'}>上一題</button><span class="dot">·</span><button class="tb2" aria-label="跳過" onclick="tap(this,'up')">跳過</button></div></div>`;
 const card=document.getElementById('card'),sheet=document.getElementById('sheet'),note=document.getElementById('note'),bn=document.getElementById('bn'),bi=document.getElementById('bi');
 const stop=e=>e.stopPropagation();
 if(bi){bi.addEventListener('pointerdown',stop);bi.onclick=e=>{e.stopPropagation();card.classList.add('flipped');paused=true}}
@@ -380,8 +433,9 @@ card.querySelector('.back').addEventListener('pointerdown',stop);
 bn.addEventListener('pointerdown',stop);bn.onclick=e=>{e.stopPropagation();sheet.classList.add('on');paused=true;setTimeout(()=>note.focus(),50)};
 sheet.addEventListener('pointerdown',stop);document.getElementById('nclose').onclick=e=>{e.stopPropagation();sheet.classList.remove('on');paused=false;bn.classList.toggle('has',!!note.value.trim());bn.textContent=note.value.trim()?'✉ 已補充':'✉ 補充'};
 drag(card)}
-function trans(c){paused=true;cnt.textContent='說明';app.innerHTML=`<div class="screen" id="trans"><div class="ttl">換個話題 👉</div><p class="lead" id="trtext">${esc(c.tr)}</p><p class="small">（這張是說明，不用作答）</p><button class="primary" id="trgo">繼續</button></div>`;
-document.getElementById('trgo').onclick=()=>{st.tr=st.tr||{};st.tr[c.code]=1;save();render(true)}}
+function trans(c){paused=true;cnt.textContent='說明';app.innerHTML=`<div class="screen" id="trans"><div class="ttl">換個話題 👉</div><p class="lead" id="trtext">${esc(c.tr)}</p><p class="small">（這張是說明，不用作答）</p><button class="primary" id="trgo">繼續</button>${st.i>0?'<button class="link" id="trback">← 回上一題</button>':''}</div>`;
+document.getElementById('trgo').onclick=()=>{st.tr=st.tr||{};st.tr[c.code]=1;save();render(true)};
+const tb=document.getElementById('trback');if(tb)tb.onclick=()=>{st.i--;st.ans.length=st.i;save();render(true)}}
 function tap(b,d){b.classList.add('press');setTimeout(()=>b.classList.remove('press'),180);if(d==='back')back();else answer(d)}
 function answer(d){if(paused||busy)return;const c=Q[st.role][st.i],card=document.getElementById('card');if(!card||card.dataset.gone)return;card.dataset.gone=1;busy=true;
 const val=d==='up'?'不確定/跳過':c.ab?(d==='left'?c.ab[0]:c.ab[1]):(d==='right'?'是/同意':'否/不同意');
@@ -392,7 +446,7 @@ const go=()=>{card.style.transform=d==='up'?'translateY(-140%) scale(.9)':`trans
 const nc=document.getElementById('nextc');if(nc)nc.classList.add('up');
 if(!cur){setTimeout(go,140)}else go();
 setTimeout(()=>render(false),cur?420:560)}
-function back(){if(busy||paused||st.i<=0)return;if(Q[st.role][st.i].tr&&st.tr)delete st.tr[Q[st.role][st.i].code];st.i--;st.ans.length=st.i;save();render(true)}
+function back(){if(busy||paused||st.i<=0)return;const c=Q[st.role][st.i];if(c.tr&&(st.tr||{})[c.code]){delete st.tr[c.code];save();render(true);return}st.i--;st.ans.length=st.i;save();render(true)}
 function drag(el){let x0,y0,dx=0,dy=0,on=false,lt=0,lx=0,vx=0;const sl=el.querySelector('.sl'),sr=el.querySelector('.sr'),su=el.querySelector('.su'),nc=document.getElementById('nextc');
 const fx=(r,l,u)=>{sr.style.opacity=r;sl.style.opacity=l;su.style.opacity=u};const cl=v=>Math.min(1,Math.max(0,v));
 el.addEventListener('pointerdown',e=>{if(paused||busy)return;on=true;x0=e.clientX;y0=e.clientY;lx=x0;lt=performance.now();el.classList.add('drag');el.setPointerCapture(e.pointerId)});
@@ -404,10 +458,13 @@ if(dx>100||(dx>40&&vx>.6))answer('right');else if(dx<-100||(dx<-40&&vx<-.6))answ
 el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end)}
 function result(){return JSON.stringify({survey:"幫幫我牙！訪談滑卡問卷 v5（白話版）",role:st.role==='dentist'?'牙醫':'民眾',started:st.t0,finished:new Date().toISOString(),answers:st.ans},null,2)}
 function send(j){if(!ENDPOINT)return Promise.resolve(false);return fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:j}).then(()=>true).catch(()=>false)}
-function done(){bar.style.width='100%';cnt.textContent='完成';const j=result();const trySend=()=>{const rb=document.getElementById('resend');if(rb)rb.hidden=true;{const t=document.getElementById('ttl');if(t)t.textContent='送出中…'}send(j).then(ok=>{const m=document.getElementById('sent');const sv=document.getElementById('saved');const rb=document.getElementById('resend');if(sv)sv.hidden=!ok;if(rb)rb.hidden=ok;if(m)m.textContent=ok?'✅ 答案已送出':'送出失敗，請檢查網路後再按一次';const t=document.getElementById('ttl');const k=document.getElementById('okmark');if(t)t.textContent=ok?'謝謝你的回答！':'還沒送出成功';if(k)k.textContent=ok?'✓':'!'})};localStorage.setItem(KEY+'_result_'+Date.now(),j);
-const A=st.ans,y=A.filter(a=>a.swipe==='right').length,n=A.filter(a=>a.swipe==='left').length,u=A.filter(a=>a.swipe==='up').length;
-app.innerHTML=`<div class="screen done"><div class="ok" id="okmark">…</div><div class="ttl" id="ttl">送出中…</div><p class="lead">${Q[st.role].length} 張卡都完成了</p><div class="stats"><div><b style="color:var(--g2)">${y}</b>右滑</div><div><b style="color:var(--red)">${n}</b>左滑</div><div><b style="color:var(--b1)">${u}</b>跳過</div></div><p class="small" id="sent"></p><p class="small" id="saved" hidden>你的回答已匿名存到 Dentalk 的研究試算表，只用於產品研究。</p><button class="link" onclick="localStorage.removeItem(KEY);start()">重新開始</button></div><div class="foot"><div class="in"><button class="primary" id="resend" hidden>重新送出</button></div></div>`;
-document.getElementById('resend').onclick=trySend;trySend()}
+function done(){document.body.classList.remove('is-home');bar.style.width='100%';cnt.textContent='送出中…';const j=result(),N=Q[st.role].length;
+const $=id=>document.getElementById(id);
+const setState=(m,o)=>{cnt.textContent=o.cnt;$('okmark').textContent=o.mark;$('okmark').className='ok '+m;$('ttl').textContent=o.ttl;$('lead').textContent=o.lead;$('sent').textContent=o.sent;$('saved').hidden=m!=='good';if(m==='good'){$('saved').textContent='你的回答會存到 Dentalk 的研究試算表，只用於產品研究。只要補充欄沒寫可以認出你的資料，這份回答就是匿名的。';localStorage.removeItem(KEY)}$('resend').hidden=m!=='fail';$('restart').hidden=m!=='good';bar.style.width=m==='fail'?'96%':'100%'};
+const trySend=()=>{setState('wait',{cnt:'送出中…',mark:'…',ttl:'送出中…',lead:'正在送出你的 '+N+' 題答案，請稍等，先不要關掉頁面。',sent:''});
+send(j).then(ok=>ok?setState('good',{cnt:'完成',mark:'✓',ttl:'謝謝你的回答！',lead:'你已回答完 '+N+' 題。',sent:'✅ 答案已送出'}):setState('fail',{cnt:'未送出',mark:'!',ttl:'還沒送出成功',lead:'你的 '+N+' 題答案還在這個畫面上，請不要關掉或重新整理頁面。',sent:'送出失敗，請檢查網路後再按一次'}))};
+app.innerHTML=`<div class="screen done"><div class="ok wait" id="okmark">…</div><div class="ttl" id="ttl">送出中…</div><p class="lead" id="lead"></p><p class="small" id="sent"></p><p class="small" id="saved" hidden></p><button class="link" id="restart" hidden onclick="localStorage.removeItem(KEY);start()">重新開始</button></div><div class="foot has-legal"><div class="in"><button class="primary" id="resend" hidden>重新送出</button></div><div class="legal">Dentalk 產品研究 · 回答只用於研究 · 不是正式服務</div></div>`;
+$('resend').onclick=trySend;trySend()}
 document.addEventListener('keydown',e=>{if(!st.role||paused||st.i>=Q[st.role].length||e.target.id==='note')return;if(e.key==='ArrowLeft')answer('left');if(e.key==='ArrowRight')answer('right');if(e.key==='ArrowUp')answer('up');if(e.key==='Backspace')back()});
-(()=>{try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.role&&s.i<Q[s.role].length){st=s;return render()}}catch(e){}start()})();
+(()=>{try{Object.keys(localStorage).filter(k=>k.indexOf(KEY+'_result_')===0).forEach(k=>localStorage.removeItem(k))}catch(e){}try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.role&&s.i<Q[s.role].length){st=s;return render()}}catch(e){}start()})();
 </script></body></html>
